@@ -1,17 +1,25 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
+/*
+  color scheme: https://coolors.co/3a4457-eaeaea-42f2f7-46acc2-498c8a
+
+  icon credit: <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+*/
+
 :root {
-  --mainTextColor: #384459;
-  --mainBackgroundColor: #EAEAEA;
+  --mainTextColor: RGBA(60, 68, 85, 1.00);
+  --mainBackgroundColor: RGBA(234, 234, 234, 1.00);
   /*font-family: 'Roboto', sans-serif;*/
   --primaryFont: 'Roboto', sans-serif;
   --timeDisplayFontSizeMobile: 80px;
   --insetAreaColor: white;
   --borderRoundness: 5px;
+  --highlightButtonColor: RGBA(98, 170, 191, 1.00);
+  --highlightButtonGlowColor: RGBA(98, 170, 191, .40)
 }
 
 div {
-  /*outline: 1px solid red;*/
+  // outline: 1px solid red;
 }
 
 body{
@@ -36,6 +44,8 @@ body{
 }
 
 .time-display {
+  min-width: 200px;
+  text-align: center;
   font-size: var(--timeDisplayFontSizeMobile);
 }
 
@@ -64,6 +74,7 @@ body{
 
 .reset-button-container {
   margin-bottom: 10px;
+  position: relative;
 }
 
 .icon-play,
@@ -77,12 +88,32 @@ body{
   transform: rotate(180deg);
 }
 
+
+
+
+.reset-button-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  // background-color: yellow;
+  animation-name: fade-anim;
+  animation-duration: 0.2s;
+}
+
+@keyframes fade-anim {
+  from {opacity: 1;}
+  to {opacity: 0;}
+}
+
+
+
 .time-mode-select-container {
   display: flex;
   justify-content: space-around;
   align-items: center;
   height: 50px;
   width: 90%;
+  max-width: 288px;
   border-radius: var(--borderRoundness);
   margin: 10px auto 0px auto;
   line-height: 20px;
@@ -92,7 +123,7 @@ body{
 
 .time-mode-button {
   // padding: 15px;
-  height: 10px;
+  // height: 10px;
   // border-right: 2px solid var(--mainTextColor);
   display: flex;
   justify-content: center;
@@ -103,3 +134,26 @@ body{
 .time-mode-button:last-of-type {
   border-right: none;
 }
+
+.glow {
+  color: var(--highlightButtonColor);
+
+  text-shadow: 0 0 1px var(--highlightButtonGlowColor);
+
+  
+}
+
+.tomato-icon-container {
+  height: 50px;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // background-color: var(--highlightButtonColor);
+  // border-radius: var(--borderRoundness);
+}
+
+.tomato-icon {
+  height: 40px;
+}
+
