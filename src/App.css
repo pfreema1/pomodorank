@@ -1,12 +1,13 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
 :root {
-  --mainTextColor: #394754;
+  --mainTextColor: #384459;
   --mainBackgroundColor: #EAEAEA;
   /*font-family: 'Roboto', sans-serif;*/
   --primaryFont: 'Roboto', sans-serif;
   --timeDisplayFontSizeMobile: 80px;
   --insetAreaColor: white;
+  --borderRoundness: 5px;
 }
 
 div {
@@ -51,7 +52,7 @@ body{
   margin: 0 0 0 25px;
   background-color: var(--mainBackgroundColor);
   
-  border-radius: 5px;
+  border-radius: var(--borderRoundness);
 }
 
 .play-pause-button-container{
@@ -66,14 +67,39 @@ body{
 }
 
 .icon-play,
+.icon-pause,
 .icon-loop-alt {
   font-size: 40px;
 }
 
+.icon-loop-alt {
+  display: inline-block;
+  transform: rotate(180deg);
+}
+
 .time-mode-select-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 50px;
+  width: 90%;
+  border-radius: var(--borderRoundness);
+  margin: 10px auto 0px auto;
+  line-height: 20px;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.time-mode-button {
+  // padding: 15px;
+  height: 10px;
+  // border-right: 2px solid var(--mainTextColor);
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 50px;
-  width: 100%;
+  text-align: center;
+}
+
+.time-mode-button:last-of-type {
+  border-right: none;
 }
