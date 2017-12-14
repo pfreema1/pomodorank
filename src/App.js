@@ -66,7 +66,6 @@ class MainTimerSection extends Component {
   handleTimerModeClick(e, timerModeNum) {
     e.preventDefault();
 
-    console.log("form parent:  timerMode = " + timerModeNum);
 
     this.setState({
       timerMode: timerModeNum,
@@ -112,9 +111,12 @@ class TimeDisplay extends Component {
     super(props);
 
     this.state = {
-      seconds: props.timerMode * 60, //1500 seconds = 25:00
-      formattedTimeString: null
+      seconds: props.timerMode * 60, 
+      formattedTimeString: null,
+      fadeGlow: false
     };
+
+    this.resetAnimClass = this.resetAnimClass.bind(this);
   }
 
   componentDidMount() {
@@ -133,12 +135,25 @@ class TimeDisplay extends Component {
 
  
   componentWillReceiveProps(nextProps) {
+    if(nextProps.isRunning !== this.props.isRunning) {
+      this.setState({
+        fadeGlow: true
+      });
+
+      //this function removes anim class
+      setTimeout(this.resetAnimClass, 500);
+    }
+
     //handle timerMode change
     if(nextProps.timerModeWasClicked) {
 
       this.setState({
-        seconds: nextProps.timerMode * 60
+        seconds: nextProps.timerMode * 60,
+        fadeGlow: true
       });
+
+      //this function removes anim class
+      setTimeout(this.resetAnimClass, 500);
 
       this.setFormattedTime(nextProps.timerMode * 60);
 
@@ -149,15 +164,24 @@ class TimeDisplay extends Component {
     //handle if reset was clicked
     if(nextProps.resetClicked) {
       this.setState({
-        seconds: nextProps.timerMode * 60
-        
+        seconds: nextProps.timerMode * 60,
+        fadeGlow: true
       });
+
+      //this function removes anim class
+      setTimeout(this.resetAnimClass, 500);
 
       this.setFormattedTime(nextProps.timerMode * 60);
 
       //call callback to set resetClicked to false
       this.props.resetWasHandled();
     }
+  }
+
+  resetAnimClass() {
+    this.setState({
+      fadeGlow: false
+    });
   }
 
 
@@ -194,7 +218,7 @@ class TimeDisplay extends Component {
 
   render() {
     return(
-      <div className="time-display">
+      <div className={"time-display " + (this.state.fadeGlow ? "glow-fade" : "")}>
         {this.state.formattedTimeString}
       </div>
 
@@ -223,14 +247,54 @@ class PlayPauseResetButtons extends Component {
 
 class PlayAndPauseButton extends Component {
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      fadeGlow: false
+    };
+
+    this.handleClick = this.handleClick.bind(this);
+    this.resetIconAnim = this.resetIconAnim.bind(this);
+    this.returnClasses = this.returnClasses.bind(this);
+  }
+
+  handleClick(e) {
+
+    this.setState({
+      fadeGlow: true
+    });
+
+    setTimeout(this.resetIconAnim, 500);
+
+    //let parent know
+    this.props.playPauseHandler(e);
+  }
+
+  resetIconAnim() {
+    this.setState({
+      fadeGlow: false
+    });
+  }
+
+  returnClasses() {
+    let iconClassString = this.props.isRunning ? "icon-pause " : "icon-play ";
+
+    let animClassString = this.state.fadeGlow ? "glow-fade" : "";
+
+    
+
+    return iconClassString + animClassString;
+  }
+
   render() {
     return (
       <div 
-        className="play-pause-button-container" 
-        onClick={this.props.playPauseHandler}
+        className="play-pause-button-container"
+        onClick={this.handleClick}
       >
         
-        <i className={this.props.isRunning ? "icon-pause" : "icon-play"}></i>
+        <i className={this.returnClasses()}></i>
       </div>
     );
   }
@@ -244,49 +308,43 @@ class ResetButton extends Component {
     super(props);
 
     this.state = {
-      wasClicked: false
+      fadeGlow: false
     }
 
     this.handleClick = this.handleClick.bind(this);
-    this.resetIconElement = this.resetIconElement.bind(this);
+    this.resetIconAnim = this.resetIconAnim.bind(this);
   }
 
   handleClick(e) {
-    console.log("handleClick fired");
+    e.preventDefault();
 
     this.setState({
-      wasClicked: true
+      fadeGlow: true
     });
 
-    setTimeout(this.resetIconElement, 1000);
+    setTimeout(this.resetIconAnim, 500);
 
     //let parent controller know resets' been clicked
     this.props.resetHandler(e);
   }
 
-  resetIconElement() {
+  resetIconAnim() {
     this.setState({
-      wasClicked: false
+      fadeGlow: false
     });
   }
   
-  render() {
+  
 
-    let element = null;
-    if(this.state.wasClicked) {
-      element = <div><i className="icon-loop-alt"></i>
-        <i className="icon-loop-alt reset-button-overlay glow"></i></div>;
-    } else { 
-      element = <div><i className="icon-loop-alt"></i><i className="icon-loop-alt reset-button-overlay"></i>
-      </div>;
-    }
+  render() {
+    
 
     return (
       <div 
         className="reset-button-container"
         onClick={this.handleClick}
       >
-        {element}
+        <i className={"icon-loop-alt " + (this.state.fadeGlow ? "glow-fade" : "")}></i>
       </div>
     );
   }

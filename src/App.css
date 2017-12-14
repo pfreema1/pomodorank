@@ -96,15 +96,18 @@ body{
   top: 0;
   left: 0;
   // background-color: yellow;
-  animation-name: fade-anim;
-  animation-duration: 0.2s;
+  opacity: 1;
 }
 
-@keyframes fade-anim {
-  from {opacity: 1;}
-  to {opacity: 0;}
+@keyframes fade-glow-anim {
+  from {color: var(--highlightButtonColor);}
+  to {color: var(--mainTextColor);} 
+
 }
 
+.glow-fade {
+  animation: fade-glow-anim 1.3s forwards;
+}
 
 
 .time-mode-select-container {
