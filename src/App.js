@@ -1,7 +1,15 @@
 import React, { Component } from 'react';
 import './App.css';
+/* images */
 import tomatoIcon from './tomatoIcon.png';
 import tomatoIconGlow from './tomatoIconGlow_withBlur.png';
+/* sounds */
+import spookySound from './sounds/2spooky.mp3';
+import fluteSound from './sounds/flute.mp3';
+import pianoSound from './sounds/piano.mp3';
+import woohooSound from './sounds/smurf_woohoo.mp3';
+import chippySound from './sounds/theresmychippy.mp3';
+
 
 class App extends Component {
   render() {
@@ -202,6 +210,8 @@ class TimeDisplay extends Component {
   }
 
   updateTime() {
+
+    console.log(this.state.seconds);
     
     if(this.props.isRunning) {
       let currentSeconds = this.state.seconds - 1;
