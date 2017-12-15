@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Anton|Open+Sans+Condensed:300');
 
 /*
   color scheme: https://coolors.co/3a4457-eaeaea-42f2f7-46acc2-498c8a
@@ -10,12 +10,19 @@
   --mainTextColor: RGBA(60, 68, 85, 1.00);
   --mainBackgroundColor: RGBA(234, 234, 234, 1.00);
   /*font-family: 'Roboto', sans-serif;*/
-  --primaryFont: 'Roboto', sans-serif;
+  // --primaryFont: 'Roboto', sans-serif;
+  // --primaryFont: 'Bungee', cursive;
+  --primaryFont: 'Anton', sans-serif;
+  --secondaryFont: 'Open Sans Condensed', sans-serif;
   --timeDisplayFontSizeMobile: 80px;
   --insetAreaColor: white;
   --borderRoundness: 5px;
   --highlightButtonColor: RGBA(98, 170, 191, 1.00);
-  --highlightButtonGlowColor: RGBA(98, 170, 191, .40)
+  --highlightButtonGlowColor: RGBA(98, 170, 191, .40);
+  --logoLetterSpacing: 2px;
+  --logoColor: white;
+  --logoShadowColor: RGBA(60, 68, 85, 1.00);
+  --optionsCardColor: RGBA(234, 234, 234, 1.00)
 }
 
 div {
@@ -53,6 +60,10 @@ body{
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.3), 0px 1px 0px white;
 }
 
+.box-shadow-normal {
+  box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.3), 0px 1px 0px white;
+}
+
 .play-pause-reset-buttons-container {
   display: flex;
   flex-direction: column;
@@ -79,11 +90,23 @@ body{
 
 .icon-play,
 .icon-pause,
-.icon-loop-alt {
+.icon-cw,
+.icon-cancel {
   font-size: 40px;
 }
 
-.icon-loop-alt {
+.icon-cog {
+  font-size: 30px;
+  position: relative;
+  margin-right: 10px;
+  display: inline-block;
+}
+
+
+
+
+
+.icon-cw {
   display: inline-block;
   transform: rotate(180deg);
 }
@@ -105,8 +128,24 @@ body{
 
 }
 
+@keyframes spin-anim {
+  from {
+    color: var(--highlightButtonColor);
+    transform: rotate(0deg);
+  }
+  to {
+    color: var(--mainTextColor);
+    transform: rotate(270deg);
+  } 
+
+}
+
 .glow-fade {
-  animation: fade-glow-anim 1.3s forwards;
+  animation: fade-glow-anim 1.0s forwards;
+}
+
+.glow-spin {
+  animation: spin-anim 1.0s forwards;
 }
 
 
@@ -114,12 +153,12 @@ body{
   display: flex;
   justify-content: space-around;
   align-items: center;
-  height: 50px;
+  height: 60px;
   width: 90%;
   max-width: 288px;
   border-radius: var(--borderRoundness);
   margin: 10px auto 0px auto;
-  line-height: 20px;
+  line-height: 25px;
   font-size: 20px;
   font-weight: 800;
 }
@@ -157,6 +196,159 @@ body{
 }
 
 .tomato-icon {
-  height: 40px;
+  height: 50px;
 }
 
+.header-bar {
+  width: 100vw;
+  background-color: RGBA(98, 170, 191, 1.00);
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-logo {
+  height: 100%;
+  // background-color: blue;
+  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+  font-weight: bolder;
+  margin-left: 25px;
+  // width: 100px;
+  text-shadow: -1px 1px 0px var(--logoShadowColor),
+                -2px 2px 0px var(--logoShadowColor),
+                -3px 3px 0px var(--logoShadowColor),
+                -4px 4px 0px var(--logoShadowColor),
+                -5px 5px 0px var(--logoShadowColor),
+                -6px 6px 0px var(--logoShadowColor);
+  color: var(--logoColor);
+  letter-spacing: var(--logoLetterSpacing);
+}
+
+.settings-button-container {
+  height: 100%;
+  // background-color: green;
+  display: inline-block;
+  // padding-right: 40px;
+}
+
+.settings-overlay {
+  background-color: white;
+  // opacity: .98;
+  height: 100vh;
+  width: 100vw;
+  transition: all 1.0s ease-in-out;
+  position: absolute;
+  top: 0;
+  /* change this left property to -100vw when finished styling*/
+  left: 0vw;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+}
+
+.slide-settings-in {
+  left: 0;
+}
+
+.icon-cancel {
+  float: right;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  background-color: white;
+}
+
+.options-card {
+  width: 80vw;
+  padding: 20px;
+  background-color: var(--optionsCardColor);
+  margin-top: 20px;
+  border-radius: var(--borderRoundness);
+}
+
+.username-input {
+  // margin-top: 10px;
+  display: inline-block;
+  margin-top: 10px;
+  width: 60%;
+  border-radius: var(--borderRoundness);
+  border: 1px solid rgba(0,0,0,0.3);
+}
+
+.submit-username-button {
+  float: right;
+  border-radius: var(--borderRoundness);
+}
+
+.sound-select {
+  display: block;
+  background-color: white;
+  margin: 10px auto 0px auto;
+  border-radius: var(--borderRoundness);
+  border: 1px solid rgba(0,0,0,0.3);
+}
+
+.settings-header {
+  margin-top: 30px;
+  font-size: 40px;
+  text-align: center;
+}
+
+.submit-username-button {
+  font-family: var(--primaryFont);
+  background-color: RGBA(123, 239, 245, 1.00);
+  padding: 15px;
+}
+
+.username-input-and-button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notifications-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notifications-toggle-container {
+  width: 50px;
+  height: 30px;
+  // background-color: yellow;
+  position: relative;
+}
+
+.toggle-background {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  height: 15px;
+  width: 50px;
+  background-color: white;
+  border-radius: var(--borderRoundness);
+
+}
+
+.toggle-button {
+  height: 25px;
+  width: 25px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: RGBA(89, 138, 137, 1.00);
+  border-radius: var(--borderRoundness);
+}
