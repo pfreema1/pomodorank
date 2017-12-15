@@ -30,6 +30,7 @@ class MainTimerSection extends Component {
       isRunning: false,
       resetWasClicked: false,
       timerModeWasClicked: false
+      
     };
 
     this.handlePlayPauseClick = this.handlePlayPauseClick.bind(this);
@@ -73,7 +74,6 @@ class MainTimerSection extends Component {
 
   handleTimerModeClick(e, timerModeNum) {
     e.preventDefault();
-
 
     this.setState({
       timerMode: timerModeNum,
@@ -119,9 +119,10 @@ class TimeDisplay extends Component {
     super(props);
 
     this.state = {
-      seconds: props.timerMode * 60, 
+      seconds: props.timerMode * 60,
       formattedTimeString: null,
-      fadeGlow: false
+      fadeGlow: false,
+      timeRanOut: true
     };
 
     this.resetAnimClass = this.resetAnimClass.bind(this);
@@ -131,10 +132,6 @@ class TimeDisplay extends Component {
 
     this.setFormattedTime(this.state.seconds);
 
-    // THIS WILL PROBABLY HAVE TO CHANGE LATER
-    //as of right now, the interval is running regardless!
-    this.intervalId = setInterval(() => this.updateTime(), 1000);
-    
   }
 
   componentWillUnmount() {
@@ -143,17 +140,38 @@ class TimeDisplay extends Component {
 
  
   componentWillReceiveProps(nextProps) {
+    //animate display with glow
     if(nextProps.isRunning !== this.props.isRunning) {
+      if(nextProps.isRunning) {
+        this.setState({
+          timeRanOut: false
+        });
+
+        //play, start interval
+        this.intervalId = setInterval(() => this.updateTime(), 1000);
+      } else {
+        //paused, clear interval
+        clearInterval(this.intervalId);
+      }
+
       this.setState({
         fadeGlow: true
       });
 
       //this function removes anim class
       setTimeout(this.resetAnimClass, 500);
-    }
-
-    //handle timerMode change
+    } 
+    
     if(nextProps.timerModeWasClicked) {
+      //timer mode was clicked so clear previous interval
+      clearInterval(this.intervalId);
+      //restart interval
+      this.intervalId = setInterval(() => this.updateTime(), 1000);
+
+      this.setState({
+        timeRanOut: false
+      });
+      
 
       this.setState({
         seconds: nextProps.timerMode * 60,
@@ -212,8 +230,21 @@ class TimeDisplay extends Component {
   updateTime() {
 
     console.log(this.state.seconds);
-    
-    if(this.props.isRunning) {
+
+    if(this.state.seconds <= 0) {
+      //time has run out, play sound and set isRunning to false
+      //stop interval
+      clearInterval(this.intervalId);
+
+      //set state
+      this.setState({
+        formattedTimeString: "0:00",
+        timeRanOut: true
+      });
+
+      //play sound
+
+    } else if(this.props.isRunning) {
       let currentSeconds = this.state.seconds - 1;
 
       this.setFormattedTime(currentSeconds);
@@ -229,6 +260,7 @@ class TimeDisplay extends Component {
   render() {
     return(
       <div className={"time-display " + (this.state.fadeGlow ? "glow-fade" : "")}>
+        <pre style={{fontSize: '10px'}}>{JSON.stringify(this.state,null,2)}</pre>
         {this.state.formattedTimeString}
       </div>
 
