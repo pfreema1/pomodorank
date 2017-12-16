@@ -76,6 +76,8 @@ class MainTimerSection extends Component {
             timerModeWasClicked={this.state.timerModeWasClicked}
             timerModeWasHandled={this.timerModeWasHandled}
             handleSound={this.props.handleSound}
+            handleFirstClick={this.props.handleFirstClick}
+            firstClickHasBeenClicked={this.props.firstClickHasBeenClicked}
           />
           <PlayPauseResetButtons
             isRunning={this.state.isRunning}
@@ -139,19 +141,25 @@ class TimeDisplay extends Component {
       setTimeout(this.resetAnimClass, 500);
     }
 
+    //deal with first click sound not playing weirdness
+    if(!this.props.firstClickHasBeenClicked) {
+      this.props.handleFirstClick();
+    }
+
     if (nextProps.timerModeWasClicked) {
       //timer mode was clicked so clear previous interval
       clearInterval(this.intervalId);
       //restart interval
       this.intervalId = setInterval(() => this.updateTime(), 1000);
 
-      this.setState({
-        timeRanOut: false
-      });
+      // this.setState({
+      //   timeRanOut: false
+      // });
 
       this.setState({
         seconds: nextProps.timerMode * 60,
-        fadeGlow: true
+        fadeGlow: true,
+        timeRanOut: false
       });
 
       //this function removes anim class

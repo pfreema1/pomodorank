@@ -12,7 +12,10 @@ class HeaderSection extends Component {
             <div className="header-bar box-shadow">
                 <HeaderLogo />
                 <HeaderSettingsButton 
-                    handleSettingsButtonClick={this.props.handleSettingsButtonClick}/>
+                    handleSettingsButtonClick={this.props.handleSettingsButtonClick}
+                    handleFirstClick={this.props.handleFirstClick}
+                    firstClickHasBeenClicked={this.props.firstClickHasBeenClicked}    
+                />
             </div>
         );
     }
@@ -46,6 +49,11 @@ class HeaderSettingsButton extends Component {
         });
         
         setTimeout(this.resetIconAnim, 500);
+
+        //handle first click sound playing weirdness
+        if(!this.props.firstClickHasBeenClicked) {
+            this.props.handleFirstClick();
+        }
 
         //let parent know settings button was clicked
         this.props.handleSettingsButtonClick();

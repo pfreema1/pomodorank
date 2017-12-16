@@ -25,7 +25,8 @@ class App extends Component {
         soundNum: 1,
         volume: ".75",
         notifications: false
-      }
+      },
+      firstClickHasBeenClicked: false
     };
 
     this.audio = new Audio();
@@ -34,17 +35,27 @@ class App extends Component {
     this.handleSettingsButtonClick = this.handleSettingsButtonClick.bind(this);
     this.handleSoundPlaying = this.handleSoundPlaying.bind(this);
     this.handleSettingsChange = this.handleSettingsChange.bind(this);
+    this.firstClickHandler = this.firstClickHandler.bind(this);
   }
 
-  componentDidMount() {
-    /*  weird workaround for sounds not playing on mobile until user clicks 
-        play button - play a sound with volume of 0 right when the App mounts! */
 
-    // this.audio.src = this.soundArray[this.state.userSettings.soundNum - 1];
-    // this.audio.volume = 0;
-    // this.audio.play();
-    // this.audio.play();
-  }  
+  firstClickHandler() {
+    /*  weird workaround for sounds not playing on mobile until user clicks 
+        a play button - play a sound with volume of 0 when user clicks - timermode, settings button
+        or play button
+    */
+
+    this.audio.src = this.soundArray[this.state.userSettings.soundNum - 1];
+    this.audio.volume = 0;    // volume cannot be changed on ios!
+    this.audio.play();
+    this.audio.pause();
+
+    this.setState({
+      firstClickHasBeenClicked: true
+    });
+  }
+
+
 
   handleSettingsButtonClick() {
 
@@ -90,12 +101,20 @@ class App extends Component {
             settingsCogClicked={this.state.settingsCogClicked}
             handleSound={this.handleSoundPlaying}
             settingsChange={this.handleSettingsChange}
+            
           />
           <HeaderSection 
-            handleSettingsButtonClick={this.handleSettingsButtonClick}/>
+            handleSettingsButtonClick={this.handleSettingsButtonClick}
+            handleFirstClick={this.firstClickHandler}
+            firstClickHasBeenClicked={this.state.firstClickHasBeenClicked}  
+          />
         <div className="main-container">
           
-          <MainTimerSection handleSound={this.handleSoundPlaying}/>
+          <MainTimerSection 
+            handleSound={this.handleSoundPlaying}            
+            handleFirstClick={this.firstClickHandler}
+            firstClickHasBeenClicked={this.state.firstClickHasBeenClicked}  
+          />
         </div>
       </div>
     );
