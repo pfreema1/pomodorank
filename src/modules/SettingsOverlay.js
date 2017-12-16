@@ -56,7 +56,9 @@ class SettingsOverlay extends Component {
 
                 <div className="settings-container">
                     <UsernameCard />
-                    <SoundCard />
+                    <SoundCard 
+                        handleSound={this.props.handleSound}
+                    />
                     <NotificationsCard />
                 </div>
 
@@ -93,24 +95,43 @@ class SoundCard extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            value: 1
+        };
 
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e) {
+        //play sound
+        this.props.handleSound(e.target.value);
+
+        this.setState({
+            value: e.target.value
+        });
     }
 
     render() {
         return(
-            <div className="options-card box-shadow-normal">
+            <div className="options-card box-shadow-normal soundcard-container">
                 <div>
-                    Sound
+                    <div>
+                        Sound
+                    </div>
+                    <div>
+                        <select value={this.state.value} className="sound-select" onChange={this.handleChange}>
+                            <option value={1}>Piano</option>
+                            <option value={2}>Flute</option>
+                            <option value={3}>Woohoo!</option>
+                            <option value={4}>There's My Chippy</option>
+                            <option value={5}>2spooky</option>
+                        </select>
+                    </div>
                 </div>
                 <div>
-                    <select className="sound-select" name="soundSelect">
-                        <option value="piano">Piano</option>
-                        <option value="flute">Flute</option>
-                        <option value="woohoo">Woohoo!</option>
-                        <option value="chippy">There's My Chippy</option>
-                        <option value="spooky">2spooky</option>
-                    </select>
+                    <div>
+                        Volume
+                    </div>
                 </div>
             </div>
         );
@@ -143,6 +164,7 @@ class NotificationsCard extends Component {
     render() {
         return(
             <div className="options-card box-shadow-normal notifications-container">
+                
                 <div>
                     Notifications
                 </div>
@@ -153,7 +175,7 @@ class NotificationsCard extends Component {
                         (this.state.notificationsOn ? "toggle-bg-anim" : "")}>
                     </div>
                     <div className={"toggle-button box-shadow-normal " + 
-                        (this.state.notificationsOn ? "toggle-button-anim" : "")}>
+                        (this.state.notificationsOn ? "move-right-anim" : "")}>
                     
                     </div>
 

@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
 
-/* sounds */
-// import spookySound from '../sounds/2spooky.mp3';
-// import fluteSound from '../sounds/flute.mp3';
-// import pianoSound from '../sounds/piano.mp3';
-// import woohooSound from '../sounds/smurf_woohoo.mp3';
-// import chippySound from '../sounds/theresmychippy.mp3';
+
 
 class HeaderSection extends Component {
     // constructor(props) {

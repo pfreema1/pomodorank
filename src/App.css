@@ -295,7 +295,7 @@ body{
 .sound-select {
   display: block;
   background-color: white;
-  margin: 10px auto 0px auto;
+  margin: 10px 0 0 0;
   border-radius: var(--borderRoundness);
   border: 1px solid rgba(0,0,0,0.3);
 }
@@ -351,4 +351,23 @@ body{
   transform: translateY(-50%);
   background-color: RGBA(89, 138, 137, 1.00);
   border-radius: var(--borderRoundness);
+  transition: all 0.3s ease-in-out;
+  left: 0px;
+  // opacity: 0.8;
+}
+
+.move-right-anim {
+  left: 30px;
+  background-color: RGBA(123, 239, 245, 1.00);
+  // opacity: 1;
+}
+
+.toggle-bg-anim {
+  background-color: RGBA(98, 170, 191, 0.3);
+}
+
+.soundcard-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
