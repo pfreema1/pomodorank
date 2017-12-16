@@ -55,11 +55,16 @@ class SettingsOverlay extends Component {
                 </div>
 
                 <div className="settings-container">
-                    <UsernameCard />
+                    <UsernameCard 
+                        handleSettingsChange={this.props.settingsChange}
+                    />
                     <SoundCard 
+                        handleSettingsChange={this.props.settingsChange}
                         handleSound={this.props.handleSound}
                     />
-                    <NotificationsCard />
+                    <NotificationsCard 
+                        handleSettingsChange={this.props.settingsChange}
+                    />
                 </div>
 
             </div>
@@ -96,18 +101,33 @@ class SoundCard extends Component {
         super(props);
 
         this.state = {
-            value: 1
+            soundValue: 1,
+            volumeValue: .75
         };
-
-        this.handleChange = this.handleChange.bind(this);
+        
+        this.handleSoundChange = this.handleSoundChange.bind(this);
+        this.handleVolumeChange = this.handleVolumeChange.bind(this);
     }
 
-    handleChange(e) {
-        //play sound
-        this.props.handleSound(e.target.value);
+    handleSoundChange(e) {
+        //play sound in parent
+        // this.props.handleSound(e.target.value, this.state.volumeValue);
+
+        //tell parent controller a setting has changed
+        this.props.handleSettingsChange(e.target.id, e.target.value);
 
         this.setState({
-            value: e.target.value
+            soundValue: e.target.value
+        });
+    }
+
+    handleVolumeChange(e) {
+
+        //tell parent controller a setting has changed
+        this.props.handleSettingsChange(e.target.id, e.target.value);
+
+        this.setState({
+            volumeValue: e.target.value
         });
     }
 
@@ -119,7 +139,7 @@ class SoundCard extends Component {
                         Sound
                     </div>
                     <div>
-                        <select value={this.state.value} className="sound-select" onChange={this.handleChange}>
+                        <select id="soundNum" value={this.state.soundValue} className="settings-select" onChange={this.handleSoundChange}>
                             <option value={1}>Piano</option>
                             <option value={2}>Flute</option>
                             <option value={3}>Woohoo!</option>
@@ -131,6 +151,15 @@ class SoundCard extends Component {
                 <div>
                     <div>
                         Volume
+                    </div>
+                    <div>
+                        <select id="volume" value={this.state.volumeValue} className="settings-select" onChange={this.handleVolumeChange}>
+                                <option value={0}>Mute</option>
+                                <option value={.25}>25%</option>
+                                <option value={.5}>50%</option>
+                                <option value={.75}>75%</option>
+                                <option value={1}>100%</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -151,8 +180,10 @@ class NotificationsCard extends Component {
 
     }
 
-    handleClick() {
-        console.log("clicked!");
+    handleClick(e) {
+        
+        //tell parent controller a setting has changed
+        this.props.handleSettingsChange("notifications", !this.state.notificationsOn);
 
         this.setState({
             notificationsOn: !this.state.notificationsOn

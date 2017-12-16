@@ -75,6 +75,7 @@ class MainTimerSection extends Component {
             resetWasHandled={this.resetWasHandled}
             timerModeWasClicked={this.state.timerModeWasClicked}
             timerModeWasHandled={this.timerModeWasHandled}
+            handleSound={this.props.handleSound}
           />
           <PlayPauseResetButtons
             isRunning={this.state.isRunning}
@@ -98,7 +99,7 @@ class TimeDisplay extends Component {
     super(props);
 
     this.state = {
-      seconds: props.timerMode * 60,
+      seconds: props.timerMode - (props.timerMode - 1),  // props.timerMode * 60,
       formattedTimeString: null,
       fadeGlow: false,
       timeRanOut: true
@@ -202,6 +203,7 @@ class TimeDisplay extends Component {
 
     if (this.state.seconds <= 0) {
       //time has run out, play sound and set isRunning to false
+      this.props.handleSound();
       //stop interval
       clearInterval(this.intervalId);
 

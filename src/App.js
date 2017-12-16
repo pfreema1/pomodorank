@@ -19,7 +19,13 @@ class App extends Component {
     super(props);
 
     this.state = {
-      settingsCogClicked: false
+      settingsCogClicked: false,
+      userSettings: {
+        username: "foo",
+        soundNum: 1,
+        volume: ".75",
+        notifications: false
+      }
     };
 
     this.audio = new Audio();
@@ -27,9 +33,18 @@ class App extends Component {
 
     this.handleSettingsButtonClick = this.handleSettingsButtonClick.bind(this);
     this.handleSoundPlaying = this.handleSoundPlaying.bind(this);
+    this.handleSettingsChange = this.handleSettingsChange.bind(this);
   }
 
-  
+  componentDidMount() {
+    /*  weird workaround for sounds not playing on mobile until user clicks 
+        play button - play a sound with volume of 0 right when the App mounts! */
+
+    // this.audio.src = this.soundArray[this.state.userSettings.soundNum - 1];
+    // this.audio.volume = 0;
+    // this.audio.play();
+    // this.audio.play();
+  }  
 
   handleSettingsButtonClick() {
 
@@ -38,12 +53,32 @@ class App extends Component {
     });
   }
 
+  handleSettingsChange(changedKey, changedVal) {
+    // console.log("changedKey:  " + changedKey);
+    // console.log("changedVal:  " + changedVal);
+    // console.log("typeof changedVal:  " + typeof changedVal);
+
+    this.setState({
+      userSettings: {
+        ...this.state.userSettings,
+        [changedKey]: changedVal
+      }
+    }, function() {
+      //if changedKey == soundNum, call handleSoundPlaying
+      if(changedKey === "soundNum") {
+        this.handleSoundPlaying();
+      }
+    });
 
 
-  handleSoundPlaying(soundNum, volume) {
-    console.log("sound:  " + soundNum);
-    this.audio.src = this.soundArray[soundNum - 1];
-    // this.audio.volume = volume;
+    
+
+  }
+
+  handleSoundPlaying() {
+    
+    this.audio.src = this.soundArray[this.state.userSettings.soundNum - 1];
+    this.audio.volume = parseFloat(this.state.userSettings.volume, 10);
     this.audio.play();
 
   }
@@ -54,12 +89,13 @@ class App extends Component {
           <SettingsOverlay 
             settingsCogClicked={this.state.settingsCogClicked}
             handleSound={this.handleSoundPlaying}
+            settingsChange={this.handleSettingsChange}
           />
           <HeaderSection 
             handleSettingsButtonClick={this.handleSettingsButtonClick}/>
         <div className="main-container">
           
-          <MainTimerSection />
+          <MainTimerSection handleSound={this.handleSoundPlaying}/>
         </div>
       </div>
     );
