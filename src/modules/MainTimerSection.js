@@ -78,6 +78,7 @@ class MainTimerSection extends Component {
             handleSound={this.props.handleSound}
             handleFirstClick={this.props.handleFirstClick}
             firstClickHasBeenClicked={this.props.firstClickHasBeenClicked}
+            notificationSetting={this.props.notificationSetting}
           />
           <PlayPauseResetButtons
             isRunning={this.state.isRunning}
@@ -101,7 +102,7 @@ class TimeDisplay extends Component {
     super(props);
 
     this.state = {
-      seconds: props.timerMode - (props.timerMode - 1),  // props.timerMode * 60,
+      seconds: props.timerMode - (props.timerMode - 10),  // props.timerMode * 60,
       formattedTimeString: null,
       fadeGlow: false,
       timeRanOut: true
@@ -205,6 +206,9 @@ class TimeDisplay extends Component {
     this.setState({
       formattedTimeString: minutesString + ":" + secondsString
     });
+
+    //update title bar text
+    document.title = `(${minutesString}:${secondsString}) POMODORANK`;
   }
 
   updateTime() {
@@ -221,7 +225,18 @@ class TimeDisplay extends Component {
         timeRanOut: true
       });
 
-      //play sound
+      //display notification if notifications are on
+      if(this.props.notificationSetting) {
+
+        let options = {
+          body: "Time's up!",
+          icon: tomatoIcon
+        }
+
+        let n = new Notification("POMODORANK", options);
+        setTimeout(n.close.bind(n), 4000);
+      }
+
     } else if (this.props.isRunning) {
       let currentSeconds = this.state.seconds - 1;
 
@@ -230,6 +245,8 @@ class TimeDisplay extends Component {
       this.setState({
         seconds: currentSeconds
       });
+
+      
     }
   }
 

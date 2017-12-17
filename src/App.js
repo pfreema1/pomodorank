@@ -18,13 +18,15 @@ class App extends Component {
   constructor(props) {
     super(props);
 
+    
+
     this.state = {
       settingsCogClicked: false,
       userSettings: {
         username: "foo",
         soundNum: 1,
         volume: ".75",
-        notifications: false
+        notifications: Notification.permission === "granted" ? true : false
       },
       firstClickHasBeenClicked: false
     };
@@ -37,6 +39,7 @@ class App extends Component {
     this.handleSettingsChange = this.handleSettingsChange.bind(this);
     this.firstClickHandler = this.firstClickHandler.bind(this);
   }
+
 
 
   firstClickHandler() {
@@ -65,10 +68,9 @@ class App extends Component {
   }
 
   handleSettingsChange(changedKey, changedVal) {
-    // console.log("changedKey:  " + changedKey);
-    // console.log("changedVal:  " + changedVal);
-    // console.log("typeof changedVal:  " + typeof changedVal);
 
+    //the function at the end is a callback function - needed so we 
+    //can use the new state settings for operations immediately after changing
     this.setState({
       userSettings: {
         ...this.state.userSettings,
@@ -78,6 +80,10 @@ class App extends Component {
       //if changedKey == soundNum, call handleSoundPlaying
       if(changedKey === "soundNum") {
         this.handleSoundPlaying();
+      } else if(changedKey === "notifications") {
+
+        Notification.requestPermission();
+
       }
     });
 
@@ -101,7 +107,7 @@ class App extends Component {
             settingsCogClicked={this.state.settingsCogClicked}
             handleSound={this.handleSoundPlaying}
             settingsChange={this.handleSettingsChange}
-            
+            notificationSetting={this.state.userSettings.notifications}        
           />
           <HeaderSection 
             handleSettingsButtonClick={this.handleSettingsButtonClick}
@@ -114,6 +120,7 @@ class App extends Component {
             handleSound={this.handleSoundPlaying}            
             handleFirstClick={this.firstClickHandler}
             firstClickHasBeenClicked={this.state.firstClickHasBeenClicked}  
+            notificationSetting={this.state.userSettings.notifications}
           />
         </div>
       </div>

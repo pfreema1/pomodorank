@@ -64,6 +64,7 @@ class SettingsOverlay extends Component {
                     />
                     <NotificationsCard 
                         handleSettingsChange={this.props.settingsChange}
+                        notificationSetting={this.props.notificationSetting}
                     />
                 </div>
 
@@ -172,7 +173,7 @@ class NotificationsCard extends Component {
         super(props);
 
         this.state = {
-            notificationsOn: false
+            notificationsOn: props.notificationSetting
 
         };
 
@@ -181,6 +182,8 @@ class NotificationsCard extends Component {
     }
 
     handleClick(e) {
+
+        
         
         //tell parent controller a setting has changed
         this.props.handleSettingsChange("notifications", !this.state.notificationsOn);
