@@ -5,6 +5,7 @@ import './App.css';
 import SettingsOverlay from './modules/SettingsOverlay';
 import HeaderSection from './modules/HeaderSection';
 import MainTimerSection from './modules/MainTimerSection';
+import RankingsSection from './modules/RankingsSection';
 
 /* sounds */
 import spookySound from './sounds/2spooky.mp3';
@@ -18,12 +19,11 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    
-
     this.state = {
       settingsCogClicked: false,
       userSettings: {
-        username: "foo",
+        userId: 0,
+        username: "AnonymousTomato",
         soundNum: 1,
         volume: ".75",
         notifications: Notification.permission === "granted" ? true : false
@@ -38,9 +38,87 @@ class App extends Component {
     this.handleSoundPlaying = this.handleSoundPlaying.bind(this);
     this.handleSettingsChange = this.handleSettingsChange.bind(this);
     this.firstClickHandler = this.firstClickHandler.bind(this);
+    this.updateCookie = this.updateCookie.bind(this);
   }
 
+  componentDidMount() {
+    //check if cookie with userid alread exists, if not make one, if so,
+    //update userSettings
+    var allCookies = document.cookie;
 
+    // document.cookie = "meow=mix";
+  
+    if(allCookies === "") {
+      console.log("no cookie found - running get request for user id");
+      //make get request to api to get id
+      fetch('https://serene-escarpment-46084.herokuapp.com/randomId', {
+        method: 'get',
+        mode: 'cors'
+      }).then(res=>res.text())
+      .then(res => {
+        
+        //save id to cookie
+        document.cookie = "userId=" + res;
+
+        this.setState({
+          userSettings: {
+            ...this.state.userSettings,
+            userId: res
+          }
+        });
+
+      })
+      .then(() => {
+        //new user - save user settings state to cookie
+        this.updateCookie();
+      });
+
+
+    } else {
+      console.log("cookie found:  " + allCookies);
+    }
+  }
+
+  updateCookie() {
+    
+    //use userSettings to update cookie
+    // document.cookie = "userId=" + this.state.userSettings.userId;
+    // document.cookie = "username=" + this.state.userSettings.username;
+    // document.cookie = "soundNum=" + this.state.userSettings.soundNum;
+    // document.cookie = "volume=" + this.state.userSettings.volume;
+    // document.cookie = "notifications=" + this.state.userSettings.notifications;
+
+    this.createCookie("userId", this.state.userSettings.userId, 7);
+    this.createCookie("username", this.state.userSettings.username, 7);
+    this.createCookie("soundNum", this.state.userSettings.soundNum, 7);
+    this.createCookie("volume", this.state.userSettings.volume, 7);
+    this.createCookie("notifications", this.state.userSettings.notifications, 7);
+  }
+
+  createCookie(name,value,days) {
+    var expires = "";
+
+    if (days) {
+      var date = new Date();
+      date.setTime(date.getTime()+(days*24*60*60*1000));
+      expires = "; expires=" + date.toGMTString();
+    }
+    else {
+      expires = "";
+    }
+    document.cookie = name + "=" + value + expires + "; path=/";
+  }
+
+  readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+      var c = ca[i];
+      while (c.charAt(0) === ' ') c = c.substring(1,c.length);
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+  }
 
   firstClickHandler() {
     /*  weird workaround for sounds not playing on mobile until user clicks 
@@ -81,10 +159,10 @@ class App extends Component {
       if(changedKey === "soundNum") {
         this.handleSoundPlaying();
       } else if(changedKey === "notifications") {
-
         Notification.requestPermission();
-
       }
+
+      this.updateCookie();
     });
 
 
@@ -107,7 +185,8 @@ class App extends Component {
             settingsCogClicked={this.state.settingsCogClicked}
             handleSound={this.handleSoundPlaying}
             settingsChange={this.handleSettingsChange}
-            notificationSetting={this.state.userSettings.notifications}        
+            notificationSetting={this.state.userSettings.notifications} 
+             
           />
           <HeaderSection 
             handleSettingsButtonClick={this.handleSettingsButtonClick}
@@ -123,6 +202,9 @@ class App extends Component {
             notificationSetting={this.state.userSettings.notifications}
           />
         </div>
+        <RankingsSection 
+          userSettings={this.state.userSettings}
+        />
       </div>
     );
   }
