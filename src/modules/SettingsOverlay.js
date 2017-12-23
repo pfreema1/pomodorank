@@ -10,6 +10,8 @@ class SettingsOverlay extends Component {
             fadeGlow: false
         };
 
+        
+
         this.closeButtonClickHandler = this.closeButtonClickHandler.bind(this);
         this.resetIconAnim = this.resetIconAnim.bind(this);
     }
@@ -57,14 +59,17 @@ class SettingsOverlay extends Component {
                 <div className="settings-container">
                     <UsernameCard 
                         handleSettingsChange={this.props.settingsChange}
+                        userSettings={this.props.userSettings}
+                        handleUsernameChange={this.props.handleUsernameChange}
                     />
                     <SoundCard 
                         handleSettingsChange={this.props.settingsChange}
                         handleSound={this.props.handleSound}
+                        userSettings={this.props.userSettings}
                     />
                     <NotificationsCard 
                         handleSettingsChange={this.props.settingsChange}
-                        notificationSetting={this.props.notificationSetting}
+                        userSettings={this.props.userSettings}
                     />
                 </div>
 
@@ -78,8 +83,24 @@ class UsernameCard extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            username: props.userSettings.username
+        };
 
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            username: nextProps.userSettings.username
+        });
+    }
+
+    handleClick() {
+        //get value of input at time of submit button click
+        let usrString = document.querySelector(".username-input").value;
+        //update userSettings in parent
+        this.props.handleUsernameChange(usrString);
     }
 
     render() {
@@ -89,8 +110,8 @@ class UsernameCard extends Component {
                     Username
                 </div>
                 <div className="username-input-and-button-container">
-                    <input className="username-input" placeholder="username"></input>
-                    <button className="submit-username-button box-shadow-normal">Submit</button>
+                    <input className="username-input" placeholder={this.state.username}></input>
+                    <button onClick={this.handleClick} className="submit-username-button box-shadow-normal">Submit</button>
                 </div>
             </div>
         );
@@ -102,13 +123,23 @@ class SoundCard extends Component {
         super(props);
 
         this.state = {
-            soundValue: 1,
-            volumeValue: .75
+            soundValue: props.userSettings.soundValue,
+            volumeValue: props.userSettings.volumeValue
         };
         
         this.handleSoundChange = this.handleSoundChange.bind(this);
         this.handleVolumeChange = this.handleVolumeChange.bind(this);
     }
+
+    componentWillReceiveProps(nextProps) {
+        
+        
+        this.setState({
+            soundValue: nextProps.userSettings.soundNum,
+            volumeValue: nextProps.userSettings.volume
+        });
+    }
+
 
     handleSoundChange(e) {
         //play sound in parent
@@ -172,8 +203,9 @@ class NotificationsCard extends Component {
     constructor(props) {
         super(props);
 
+
         this.state = {
-            notificationsOn: props.notificationSetting
+            notificationsOn: props.userSettings.notfications
 
         };
 
@@ -181,10 +213,15 @@ class NotificationsCard extends Component {
 
     }
 
-    handleClick(e) {
+    componentWillReceiveProps(nextProps) {
+        // console.log("nextProps.userSettings.notifications:  " + nextProps.userSettings.notifications);
+        this.setState({
+            notificationsOn: nextProps.userSettings.notifications
+        });
+    }
 
-        
-        
+    handleClick(e) {
+    
         //tell parent controller a setting has changed
         this.props.handleSettingsChange("notifications", !this.state.notificationsOn);
 
@@ -192,7 +229,6 @@ class NotificationsCard extends Component {
             notificationsOn: !this.state.notificationsOn
         });
 
-        
     }
 
     render() {

@@ -39,6 +39,7 @@ class App extends Component {
     this.handleSettingsChange = this.handleSettingsChange.bind(this);
     this.firstClickHandler = this.firstClickHandler.bind(this);
     this.updateCookie = this.updateCookie.bind(this);
+    this.handleUsernameChange = this.handleUsernameChange.bind(this);
   }
 
   componentDidMount() {
@@ -76,17 +77,23 @@ class App extends Component {
 
     } else {
       console.log("cookie found:  " + allCookies);
+
+      //set state according to cookies
+      this.setState({
+        userSettings: {
+          userId: this.readCookie("userId"),
+          username: this.readCookie("username"),
+          soundNum: this.readCookie("soundNum"),
+          volume: this.readCookie("volume"),
+          notifications: this.readCookie("notifications") === "true" ? true : false
+        }
+        
+      });
     }
   }
 
   updateCookie() {
     
-    //use userSettings to update cookie
-    // document.cookie = "userId=" + this.state.userSettings.userId;
-    // document.cookie = "username=" + this.state.userSettings.username;
-    // document.cookie = "soundNum=" + this.state.userSettings.soundNum;
-    // document.cookie = "volume=" + this.state.userSettings.volume;
-    // document.cookie = "notifications=" + this.state.userSettings.notifications;
 
     this.createCookie("userId", this.state.userSettings.userId, 7);
     this.createCookie("username", this.state.userSettings.username, 7);
@@ -178,15 +185,28 @@ class App extends Component {
 
   }
 
+  handleUsernameChange(newName) {
+    this.setState({
+      ...this.state.userSettings,
+      userSettings: {
+        username: newName
+      }
+    });
+
+    //save new username into cookie
+    this.createCookie("username", newName, 7);
+  }
+
   render() {
     return (
       <div>
+          <pre>{JSON.stringify(this.state, null, 2)}</pre>
           <SettingsOverlay 
             settingsCogClicked={this.state.settingsCogClicked}
             handleSound={this.handleSoundPlaying}
             settingsChange={this.handleSettingsChange}
-            notificationSetting={this.state.userSettings.notifications} 
-             
+            userSettings={this.state.userSettings} 
+            handleUsernameChange={this.handleUsernameChange} 
           />
           <HeaderSection 
             handleSettingsButtonClick={this.handleSettingsButtonClick}
