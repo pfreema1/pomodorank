@@ -49,8 +49,7 @@ class RankingsSection extends Component {
         return(
             <div>
                 <pre>{JSON.stringify(this.state, null, 2)}</pre>
-                SPIT OUT SOME SHIT FROM THE DB HERE:
-                <button onClick={this.handleClick}>oh shit</button>
+                <button onClick={this.handleClick}>oh snap</button>
                 <h1>USERS</h1>
                 <textarea id="textBox" rows="4" cols="50">
                     

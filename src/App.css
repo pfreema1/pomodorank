@@ -283,7 +283,7 @@ body{
   // margin-top: 10px;
   display: inline-block;
   margin-top: 10px;
-  width: 60%;
+  width: 100%;
   border-radius: var(--borderRoundness);
   border: 1px solid rgba(0,0,0,0.3);
 }
@@ -371,4 +371,20 @@ body{
   display: flex;
   justify-content: space-around;
   align-items: center;
+}
+
+.character-select-container {
+  width: 120%;
+  height: 50px;
+  margin-top: 20px;
+  background-color: yellow;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.character-container {
+  width: 90%;
+  border: 1px solid red;
+  height: 100%;
 }

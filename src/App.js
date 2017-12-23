@@ -14,6 +14,9 @@ import pianoSound from './sounds/piano.mp3';
 import woohooSound from './sounds/smurf_woohoo.mp3';
 import chippySound from './sounds/theresmychippy.mp3';
 
+/* funny text faces */
+import funnyFacesArray from './modules/FunnyFacesArray';
+
 
 class App extends Component {
   constructor(props) {
@@ -33,6 +36,8 @@ class App extends Component {
 
     this.audio = new Audio();
     this.soundArray = [pianoSound, fluteSound, woohooSound, chippySound, spookySound];
+
+    console.log(funnyFacesArray[162]);
 
     this.handleSettingsButtonClick = this.handleSettingsButtonClick.bind(this);
     this.handleSoundPlaying = this.handleSoundPlaying.bind(this);
@@ -200,7 +205,6 @@ class App extends Component {
   render() {
     return (
       <div>
-          <pre>{JSON.stringify(this.state, null, 2)}</pre>
           <SettingsOverlay 
             settingsCogClicked={this.state.settingsCogClicked}
             handleSound={this.handleSoundPlaying}

@@ -110,7 +110,20 @@ class UsernameCard extends Component {
                     Username
                 </div>
                 <div className="username-input-and-button-container">
-                    <input className="username-input" placeholder={this.state.username}></input>
+                    <div className="input-and-character-column">
+                        <input className="username-input" placeholder={this.state.username}></input>
+                        <div className="character-select-container">
+                            <div className="left-arrow-character">
+                            q
+                            </div>
+                            <div className="character-container">
+                                <code>poopy doopy</code>
+                            </div>
+                            <div className="right-arrow-character">
+                            e
+                            </div>
+                        </div>
+                    </div>
                     <button onClick={this.handleClick} className="submit-username-button box-shadow-normal">Submit</button>
                 </div>
             </div>
