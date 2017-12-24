@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+/* funny text faces */
+import funnyFacesArray from '../modules/FunnyFacesArray';
+
 
 class SettingsOverlay extends Component {
 
@@ -84,23 +87,56 @@ class UsernameCard extends Component {
         super(props);
 
         this.state = {
-            username: props.userSettings.username
+            username: props.userSettings.username,
+            characterNum: props.userSettings.characterNum
         };
 
         this.handleClick = this.handleClick.bind(this);
+        this.handleLeftClick = this.handleLeftClick.bind(this);
+        this.handleRightClick = this.handleRightClick.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log("this should run on submit lcicoicckkck");
         this.setState({
-            username: nextProps.userSettings.username
+            username: nextProps.userSettings.username,
+            characterNum: nextProps.userSettings.characterNum
         });
     }
 
     handleClick() {
         //get value of input at time of submit button click
         let usrString = document.querySelector(".username-input").value;
+        //get character number at time of submit button click
+        let charNum = this.state.characterNum;
         //update userSettings in parent
-        this.props.handleUsernameChange(usrString);
+        this.props.handleUsernameChange(usrString, charNum);
+
+        
+    }
+
+    handleLeftClick() {
+        let newCharNum = this.state.characterNum - 1;
+        if(newCharNum === 0) {
+            newCharNum = 162;
+        }
+        //scroll through funny faces array to the left 
+        this.setState({
+            characterNum: newCharNum
+        });
+        console.log("left clicked");
+    }
+
+    handleRightClick() {
+        let newCharNum = this.state.characterNum + 1;
+        if(newCharNum === 162) {
+            newCharNum = 0;
+        }
+        //scroll through funny faces array to the left 
+        this.setState({
+            characterNum: newCharNum
+        });
+        console.log("right clicked");
     }
 
     render() {
@@ -113,14 +149,14 @@ class UsernameCard extends Component {
                     <div className="input-and-character-column">
                         <input className="username-input" placeholder={this.state.username}></input>
                         <div className="character-select-container">
-                            <div className="left-arrow-character">
-                            q
+                            <div onClick={this.handleLeftClick} className="left-arrow-character">
+                                <i className="icon-play char-arrow" />
                             </div>
                             <div className="character-container">
-                                <code>poopy doopy</code>
+                                <code>{funnyFacesArray[this.state.characterNum]}</code>
                             </div>
-                            <div className="right-arrow-character">
-                            e
+                            <div onClick={this.handleRightClick} className="right-arrow-character">
+                                <i className="icon-play char-arrow" />
                             </div>
                         </div>
                     </div>

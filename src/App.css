@@ -240,7 +240,7 @@ body{
 .settings-overlay {
   background-color: white;
   // opacity: .98;
-  height: 100vh;
+  height: 120vh;
   width: 100vw;
   transition: all 1.0s ease-in-out;
   position: absolute;
@@ -291,6 +291,7 @@ body{
 .submit-username-button {
   float: right;
   border-radius: var(--borderRoundness);
+  margin-top: 10px;
 }
 
 .settings-select {
@@ -314,9 +315,9 @@ body{
 }
 
 .username-input-and-button-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  // display: flex;
+  // justify-content: space-between;
+  // align-items: center;
 }
 
 .notifications-container {
@@ -374,17 +375,36 @@ body{
 }
 
 .character-select-container {
-  width: 120%;
+  width: 100%;
   height: 50px;
   margin-top: 20px;
-  background-color: yellow;
+  // background-color: yellow;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .character-container {
-  width: 90%;
-  border: 1px solid red;
+  width: 100%;
+  // border: 1px solid red;
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-radius: var(--borderRoundness);
+  border: 1px solid rgba(0,0,0,0.3);
+}
+
+code {
+  font-family: "Courier", monospace;
+}
+
+.left-arrow-character {
+  transform: rotate(180deg);
+  
+}
+
+.char-arrow {
+  font-size: 25px;
 }

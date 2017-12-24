@@ -14,8 +14,7 @@ import pianoSound from './sounds/piano.mp3';
 import woohooSound from './sounds/smurf_woohoo.mp3';
 import chippySound from './sounds/theresmychippy.mp3';
 
-/* funny text faces */
-import funnyFacesArray from './modules/FunnyFacesArray';
+
 
 
 class App extends Component {
@@ -26,9 +25,10 @@ class App extends Component {
       settingsCogClicked: false,
       userSettings: {
         userId: 0,
+        characterNum: Math.floor(Math.random() * 162),
         username: "AnonymousTomato",
         soundNum: 1,
-        volume: ".75",
+        volume: .75,
         notifications: Notification.permission === "granted" ? true : false
       },
       firstClickHasBeenClicked: false
@@ -37,7 +37,6 @@ class App extends Component {
     this.audio = new Audio();
     this.soundArray = [pianoSound, fluteSound, woohooSound, chippySound, spookySound];
 
-    console.log(funnyFacesArray[162]);
 
     this.handleSettingsButtonClick = this.handleSettingsButtonClick.bind(this);
     this.handleSoundPlaying = this.handleSoundPlaying.bind(this);
@@ -88,9 +87,10 @@ class App extends Component {
         userSettings: {
           userId: this.readCookie("userId"),
           username: this.readCookie("username"),
-          soundNum: this.readCookie("soundNum"),
-          volume: this.readCookie("volume"),
-          notifications: this.readCookie("notifications") === "true" ? true : false
+          soundNum: parseInt(this.readCookie("soundNum"), 10),
+          volume: parseInt(this.readCookie("volume"), 10),
+          notifications: this.readCookie("notifications") === "true" ? true : false,
+          characterNum: parseInt(this.readCookie("characterNum"), 10)
         }
         
       });
@@ -101,6 +101,7 @@ class App extends Component {
     
 
     this.createCookie("userId", this.state.userSettings.userId, 7);
+    this.createCookie("characterNum", this.state.userSettings.characterNum, 7);
     this.createCookie("username", this.state.userSettings.username, 7);
     this.createCookie("soundNum", this.state.userSettings.soundNum, 7);
     this.createCookie("volume", this.state.userSettings.volume, 7);
@@ -159,6 +160,9 @@ class App extends Component {
 
   handleSettingsChange(changedKey, changedVal) {
 
+    console.log("changedKey:  " + changedKey);
+    console.log("changedVal:  " + changedVal);
+
     //the function at the end is a callback function - needed so we 
     //can use the new state settings for operations immediately after changing
     this.setState({
@@ -190,16 +194,21 @@ class App extends Component {
 
   }
 
-  handleUsernameChange(newName) {
+  handleUsernameChange(newName, charNum) {
     this.setState({
-      ...this.state.userSettings,
+      
       userSettings: {
-        username: newName
+        ...this.state.userSettings,
+        username: newName,
+        characterNum: charNum
       }
     });
 
     //save new username into cookie
     this.createCookie("username", newName, 7);
+    this.createCookie("characterNum", charNum, 7);
+
+
   }
 
   render() {
@@ -211,6 +220,7 @@ class App extends Component {
             settingsChange={this.handleSettingsChange}
             userSettings={this.state.userSettings} 
             handleUsernameChange={this.handleUsernameChange} 
+            
           />
           <HeaderSection 
             handleSettingsButtonClick={this.handleSettingsButtonClick}
