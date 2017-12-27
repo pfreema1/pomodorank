@@ -55,6 +55,7 @@ var funnyFacesArray = [
     "~(˘▾˘~)",
     "¬_¬",
     "¯(°_o)/¯",
+    // eslint-disable-next-line
     "¯\_(ツ)_/¯",
     "°Д°",
     "ɳ༼ຈل͜ຈ༽ɲ",
@@ -161,6 +162,7 @@ var funnyFacesArray = [
     "(((╹д╹;)))",
     "•̀.̫•́✧",
     "(ᵒ̤̑ ₀̑ ᵒ̤̑)",
+    // eslint-disable-next-line
     "\_(ʘ_ʘ)_/"
 ];
 

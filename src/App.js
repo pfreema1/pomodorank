@@ -88,7 +88,7 @@ class App extends Component {
           userId: this.readCookie("userId"),
           username: this.readCookie("username"),
           soundNum: parseInt(this.readCookie("soundNum"), 10),
-          volume: parseInt(this.readCookie("volume"), 10),
+          volume: parseFloat(this.readCookie("volume"), 10),
           notifications: this.readCookie("notifications") === "true" ? true : false,
           characterNum: parseInt(this.readCookie("characterNum"), 10)
         }
@@ -139,6 +139,8 @@ class App extends Component {
         or play button
     */
 
+    console.log("FIRST CLICK HANDLER FIRING");
+
     this.audio.src = this.soundArray[this.state.userSettings.soundNum - 1];
     this.audio.volume = 0;    // volume cannot be changed on ios!
     this.audio.play();
@@ -159,9 +161,6 @@ class App extends Component {
   }
 
   handleSettingsChange(changedKey, changedVal) {
-
-    console.log("changedKey:  " + changedKey);
-    console.log("changedVal:  " + changedVal);
 
     //the function at the end is a callback function - needed so we 
     //can use the new state settings for operations immediately after changing

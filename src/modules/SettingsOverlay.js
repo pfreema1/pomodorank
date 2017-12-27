@@ -88,16 +88,17 @@ class UsernameCard extends Component {
 
         this.state = {
             username: props.userSettings.username,
-            characterNum: props.userSettings.characterNum
+            characterNum: props.userSettings.characterNum,
+            fadeGlow: false
         };
 
         this.handleClick = this.handleClick.bind(this);
         this.handleLeftClick = this.handleLeftClick.bind(this);
         this.handleRightClick = this.handleRightClick.bind(this);
+        this.resetIconAnim = this.resetIconAnim.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log("this should run on submit lcicoicckkck");
         this.setState({
             username: nextProps.userSettings.username,
             characterNum: nextProps.userSettings.characterNum
@@ -106,7 +107,14 @@ class UsernameCard extends Component {
 
     handleClick() {
         //get value of input at time of submit button click
-        let usrString = document.querySelector(".username-input").value;
+        let inputEl = document.querySelector(".username-input");
+        let usrString = inputEl.value;
+        if(usrString === "") {
+            if(inputEl.placeholder === "AnonymousTomato") 
+                usrString = "AnonymousTomato";
+            else 
+                usrString = inputEl.placeholder;
+        }
         //get character number at time of submit button click
         let charNum = this.state.characterNum;
         //update userSettings in parent
@@ -122,9 +130,13 @@ class UsernameCard extends Component {
         }
         //scroll through funny faces array to the left 
         this.setState({
-            characterNum: newCharNum
+            characterNum: newCharNum,
+            fadeGlow: true
         });
-        console.log("left clicked");
+        
+        setTimeout(this.resetIconAnim, 500);
+
+
     }
 
     handleRightClick() {
@@ -134,9 +146,17 @@ class UsernameCard extends Component {
         }
         //scroll through funny faces array to the left 
         this.setState({
-            characterNum: newCharNum
+            characterNum: newCharNum,
+            fadeGlow: true
         });
-        console.log("right clicked");
+        
+        setTimeout(this.resetIconAnim, 500);
+    }
+
+    resetIconAnim() {
+        this.setState({
+            fadeGlow: false
+        });
     }
 
     render() {
@@ -152,7 +172,8 @@ class UsernameCard extends Component {
                             <div onClick={this.handleLeftClick} className="left-arrow-character">
                                 <i className="icon-play char-arrow" />
                             </div>
-                            <div className="character-container">
+                            <div className={"character-container " + 
+                                (this.state.fadeGlow ? "glow-fade-bg" : "")}>
                                 <code>{funnyFacesArray[this.state.characterNum]}</code>
                             </div>
                             <div onClick={this.handleRightClick} className="right-arrow-character">
@@ -195,7 +216,7 @@ class SoundCard extends Component {
         // this.props.handleSound(e.target.value, this.state.volumeValue);
 
         //tell parent controller a setting has changed
-        this.props.handleSettingsChange(e.target.id, e.target.value);
+        this.props.handleSettingsChange(e.target.id, parseInt(e.target.value, 10));
 
         this.setState({
             soundValue: e.target.value
@@ -205,7 +226,7 @@ class SoundCard extends Component {
     handleVolumeChange(e) {
 
         //tell parent controller a setting has changed
-        this.props.handleSettingsChange(e.target.id, e.target.value);
+        this.props.handleSettingsChange(e.target.id, parseFloat(e.target.value, 10));
 
         this.setState({
             volumeValue: e.target.value

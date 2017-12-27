@@ -140,12 +140,15 @@ class TimeDisplay extends Component {
 
       //this function removes anim class
       setTimeout(this.resetAnimClass, 500);
+
+      //deal with first click sound not playing weirdness
+      if(!this.props.firstClickHasBeenClicked) {
+        console.log("is this firing off the start from maintimersection?");
+        this.props.handleFirstClick();
+      }
     }
 
-    //deal with first click sound not playing weirdness
-    if(!this.props.firstClickHasBeenClicked) {
-      this.props.handleFirstClick();
-    }
+    
 
     if (nextProps.timerModeWasClicked) {
       //timer mode was clicked so clear previous interval
