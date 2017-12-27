@@ -29,7 +29,8 @@ class App extends Component {
         username: "AnonymousTomato",
         soundNum: 1,
         volume: .75,
-        notifications: Notification.permission === "granted" ? true : false
+        isNewNotificationSupported: this.isNewNotificationSupported(),
+        notifications: window.Notification && Notification.permission === "granted" ? true : false
       },
       firstClickHasBeenClicked: false
     };
@@ -47,6 +48,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+    
     //check if cookie with userid alread exists, if not make one, if so,
     //update userSettings
     var allCookies = document.cookie;
@@ -89,6 +91,7 @@ class App extends Component {
           username: this.readCookie("username"),
           soundNum: parseInt(this.readCookie("soundNum"), 10),
           volume: parseFloat(this.readCookie("volume"), 10),
+          isNewNotificationSupported: this.readCookie("isNewNotificationSupported"), 
           notifications: this.readCookie("notifications") === "true" ? true : false,
           characterNum: parseInt(this.readCookie("characterNum"), 10)
         }
@@ -96,6 +99,36 @@ class App extends Component {
       });
     }
   }
+
+  // mobileCheck() {
+  //   //check if user is on mobile - disable notifications if true
+  //   if (/Mobi/.test(navigator.userAgent) || /Android/i.test(navigator.userAgent)) {
+  //     // mobile!
+  //     return true;
+  //   } else {
+  //     return 
+  //   }
+  // }
+
+  isNewNotificationSupported() {
+    if(!window.Notification || !Notification.requestPermission) {
+      return false;
+    }
+    if(Notification.permission === "granted") {
+      throw new Error("You must only call this BEFORE calling Notification.requestPermission(), otherwise this feature detect would bug the user with an actual notification!");
+    }
+
+    try {
+      new Notification('');
+    } catch (e) {
+      if(e.name === "TypeError") {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
 
   updateCookie() {
     
@@ -105,6 +138,7 @@ class App extends Component {
     this.createCookie("username", this.state.userSettings.username, 7);
     this.createCookie("soundNum", this.state.userSettings.soundNum, 7);
     this.createCookie("volume", this.state.userSettings.volume, 7);
+    this.createCookie("isNewNotificationSupported", this.state.userSettings.isNewNotificationSupported, 7);
     this.createCookie("notifications", this.state.userSettings.notifications, 7);
   }
 

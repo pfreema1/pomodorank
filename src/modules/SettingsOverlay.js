@@ -70,6 +70,7 @@ class SettingsOverlay extends Component {
                         handleSound={this.props.handleSound}
                         userSettings={this.props.userSettings}
                     />
+                    
                     <NotificationsCard 
                         handleSettingsChange={this.props.settingsChange}
                         userSettings={this.props.userSettings}
@@ -302,8 +303,15 @@ class NotificationsCard extends Component {
     }
 
     render() {
+
+        console.log("this.props.userSettings.isNewNotificationSupported:  " + this.props.userSettings.isNewNotificationSupported);
+
+        let {isNewNotificationSupported} = this.props.userSettings;
+        console.log("isNewNotificationSupported:  " + isNewNotificationSupported);
+        
         return(
-            <div className="options-card box-shadow-normal notifications-container">
+            <div className={"options-card box-shadow-normal notifications-container " + 
+                (isNewNotificationSupported ? "" : "dont-show")} >
                 
                 <div>
                     Notifications
@@ -322,6 +330,10 @@ class NotificationsCard extends Component {
                 </div>
             </div>
         );
+
+        
+
+        
     }
 }
 
