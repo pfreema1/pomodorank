@@ -82,7 +82,7 @@ class App extends Component {
 
 
     } else {
-      console.log("cookie found:  " + allCookies);
+      // console.log("cookie found:  " + allCookies);
 
       //set state according to cookies
       this.setState({
@@ -91,7 +91,7 @@ class App extends Component {
           username: this.readCookie("username"),
           soundNum: parseInt(this.readCookie("soundNum"), 10),
           volume: parseFloat(this.readCookie("volume"), 10),
-          isNewNotificationSupported: this.readCookie("isNewNotificationSupported"), 
+          isNewNotificationSupported: this.readCookie("isNewNotificationSupported") === "true" ? true : false, 
           notifications: this.readCookie("notifications") === "true" ? true : false,
           characterNum: parseInt(this.readCookie("characterNum"), 10)
         }
@@ -276,8 +276,6 @@ class App extends Component {
     );
   }
 }
-
-
 
 
 

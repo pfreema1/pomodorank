@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+/* funny text faces */
+import funnyFacesArray from '../modules/FunnyFacesArray';
+
 
 
 class RankingsSection extends Component {
@@ -47,13 +50,29 @@ class RankingsSection extends Component {
 
     render() {
         return(
-            <div>
-                <pre>{JSON.stringify(this.state, null, 2)}</pre>
+            <div className="rankings-container box-shadow">
                 <button onClick={this.handleClick}>oh snap</button>
-                <h1>USERS</h1>
-                <textarea id="textBox" rows="4" cols="50">
-                    
-                </textarea>
+                <div className="rankings-section-header">
+                    <div>Rank</div>
+                    <div>Name</div>
+                    <div>Pomodoros</div>
+                </div>
+                <div className="single-user-ranking-container">
+                    <div className="rank-number-container">
+                        #1
+                    </div>
+                    <div className="character-name-wrapper">
+                        <div className="rank-character-container">
+                            <code>{funnyFacesArray[this.props.userSettings.characterNum]}</code>
+                        </div>
+                        <div className="rank-name-container">
+                            MC Poopy Pants
+                        </div>
+                    </div>
+                    <div className="rank-pomodoro-container">
+                        [][][][][][]
+                    </div>
+                </div>
 
             </div>
         );

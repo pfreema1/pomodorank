@@ -276,8 +276,8 @@ class NotificationsCard extends Component {
 
 
         this.state = {
-            notificationsOn: props.userSettings.notfications
-
+            notificationsOn: props.userSettings.notfications,
+            isNewNotificationSupported: props.userSettings.isNewNotificationSupported
         };
 
         this.handleClick = this.handleClick.bind(this);
@@ -285,9 +285,10 @@ class NotificationsCard extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        // console.log("nextProps.userSettings.notifications:  " + nextProps.userSettings.notifications);
+        
         this.setState({
-            notificationsOn: nextProps.userSettings.notifications
+            notificationsOn: nextProps.userSettings.notifications,
+            isNewNotificationSupported: nextProps.userSettings.isNewNotificationSupported
         });
     }
 
@@ -304,14 +305,9 @@ class NotificationsCard extends Component {
 
     render() {
 
-        console.log("this.props.userSettings.isNewNotificationSupported:  " + this.props.userSettings.isNewNotificationSupported);
-
-        let {isNewNotificationSupported} = this.props.userSettings;
-        console.log("isNewNotificationSupported:  " + isNewNotificationSupported);
-        
         return(
             <div className={"options-card box-shadow-normal notifications-container " + 
-                (isNewNotificationSupported ? "" : "dont-show")} >
+                (this.state.isNewNotificationSupported ? "" : "dont-show")} >
                 
                 <div>
                     Notifications
