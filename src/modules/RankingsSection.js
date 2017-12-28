@@ -70,7 +70,7 @@ class RankingsSection extends Component {
                         </div>
                     </div>
                     <div className="rank-pomodoro-container">
-                        [][][][][][]
+                        [][][][][][][]
                     </div>
                 </div>
 
