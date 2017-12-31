@@ -14,6 +14,9 @@ import pianoSound from './sounds/piano.mp3';
 import woohooSound from './sounds/smurf_woohoo.mp3';
 import chippySound from './sounds/theresmychippy.mp3';
 
+/* funny text faces */
+import funnyFacesArray from './modules/FunnyFacesArray';
+
 
 
 
@@ -25,7 +28,7 @@ class App extends Component {
       settingsCogClicked: false,
       userSettings: {
         userId: 0,
-        characterNum: Math.floor(Math.random() * 162),
+        characterNum: Math.floor(Math.random() * funnyFacesArray.length - 1),
         username: "AnonymousTomato",
         soundNum: 1,
         volume: .75,

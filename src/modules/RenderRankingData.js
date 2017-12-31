@@ -1,4 +1,6 @@
 import * as d3 from 'd3';
+/* funny text faces */
+import funnyFacesArray from '../modules/FunnyFacesArray';
 
 
 export default function renderRankingData(width, height, data) {
@@ -20,13 +22,16 @@ export default function renderRankingData(width, height, data) {
         // console.log("d from .value layout:  " + d);   
         return d.pomodoros;
         })
-        .padding(10);
+        .padding(5);
     
     //give data extra info so we can render as "pack" layout
     var nodes = pack.nodes(data);
     
 
     var colorScale = d3.scale.category20c();
+
+    // var fontScale = d3.scale.linear()
+    // .domain([])
     
   
     
@@ -52,8 +57,8 @@ export default function renderRankingData(width, height, data) {
         .attr("fill", function(d) { return d.username ? colorScale(d.pomodoros) : "yellow"})
         .attr("opacity", function(d) { return d.username ? 0.75 : 0.1})
         .attr("stroke", "black")
-        .attr("stroke-width", 1)
-        .attr("stroke-opacity", 0.3);
+        .attr("stroke-width", 2)
+        .attr("stroke-opacity", 1.3);
     
     //setup clip path so text doesnt overflow it's circle
     node.append("clipPath")
@@ -74,13 +79,14 @@ export default function renderRankingData(width, height, data) {
         })
         .text(function(d) {
         if(d.username) {
-            return d.username;
+            // console.log(d.characterNum);
+            return funnyFacesArray[d.characterNum];
         }
         
         })
         .attr("text-anchor", "middle")
         .attr("font-family", "sans-serif")
-        .attr("font-size", 20);
+        .attr("font-size", "30");
 }
 
 
