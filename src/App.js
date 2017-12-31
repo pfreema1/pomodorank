@@ -78,6 +78,8 @@ class App extends Component {
       .then(() => {
         //new user - save user settings state to cookie
         this.updateCookie();
+      }).catch(function(err) {
+        console.log(err);
       });
 
 
@@ -173,7 +175,7 @@ class App extends Component {
         or play button
     */
 
-    console.log("FIRST CLICK HANDLER FIRING");
+    // console.log("FIRST CLICK HANDLER FIRING");
 
     this.audio.src = this.soundArray[this.state.userSettings.soundNum - 1];
     this.audio.volume = 0;    // volume cannot be changed on ios!
@@ -228,6 +230,7 @@ class App extends Component {
   }
 
   handleUsernameChange(newName, charNum) {
+
     this.setState({
       
       userSettings: {
@@ -235,6 +238,33 @@ class App extends Component {
         username: newName,
         characterNum: charNum
       }
+    }, function() {
+      //user clicked submit button, lets send that data to API endpoint to 
+      //update the document (entry) in db
+      //items to send: userId, username, characterNum
+
+      var payload = {
+        userId: this.state.userSettings.userId,
+        username: this.state.userSettings.username,
+        characterNum: this.state.userSettings.characterNum
+      }
+
+      fetch('https://serene-escarpment-46084.herokuapp.com/handleProfileChange', {
+        method: 'post',
+        mode: 'cors',
+        headers: {
+          'Accept': 'application/json, text/plain, */*',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      }).then(function(res) {
+        return res.text();
+      })
+      .then(function(res) {
+        console.log(res);
+      }).catch(function(err) {
+        console.log(err);
+      });
     });
 
     //save new username into cookie
@@ -267,6 +297,7 @@ class App extends Component {
             handleFirstClick={this.firstClickHandler}
             firstClickHasBeenClicked={this.state.firstClickHasBeenClicked}  
             notificationSetting={this.state.userSettings.notifications}
+            userSettings={this.state.userSettings}
           />
         </div>
         <RankingsSection 

@@ -68,6 +68,7 @@ class MainTimerSection extends Component {
     return (
       <div onClick={this.handleClick}>
         <div className="time-and-play-reset-button-container">
+        
           <TimeDisplay
             isRunning={this.state.isRunning}
             timerMode={this.state.timerMode}
@@ -79,6 +80,7 @@ class MainTimerSection extends Component {
             handleFirstClick={this.props.handleFirstClick}
             firstClickHasBeenClicked={this.props.firstClickHasBeenClicked}
             notificationSetting={this.props.notificationSetting}
+            userSettings={this.props.userSettings}
           />
           <PlayPauseResetButtons
             isRunning={this.state.isRunning}
@@ -102,13 +104,14 @@ class TimeDisplay extends Component {
     super(props);
 
     this.state = {
-      seconds: props.timerMode - (props.timerMode - 10),  // props.timerMode * 60,
+      seconds: props.timerMode - (props.timerMode - 2),  // props.timerMode * 60,
       formattedTimeString: null,
       fadeGlow: false,
       timeRanOut: true
     };
 
     this.resetAnimClass = this.resetAnimClass.bind(this);
+    this.handlePomodoroComplete = this.handlePomodoroComplete.bind(this);
   }
 
   componentDidMount() {
@@ -143,7 +146,7 @@ class TimeDisplay extends Component {
 
       //deal with first click sound not playing weirdness
       if(!this.props.firstClickHasBeenClicked) {
-        console.log("is this firing off the start from maintimersection?");
+        // console.log("is this firing off the start from maintimersection?");
         this.props.handleFirstClick();
       }
     }
@@ -156,9 +159,6 @@ class TimeDisplay extends Component {
       //restart interval
       this.intervalId = setInterval(() => this.updateTime(), 1000);
 
-      // this.setState({
-      //   timeRanOut: false
-      // });
 
       this.setState({
         seconds: nextProps.timerMode * 60,
@@ -240,6 +240,9 @@ class TimeDisplay extends Component {
         setTimeout(n.close.bind(n), 4000);
       }
 
+      //take care of tracking pomodoros
+      this.handlePomodoroComplete();
+
     } else if (this.props.isRunning) {
       let currentSeconds = this.state.seconds - 1;
 
@@ -251,6 +254,35 @@ class TimeDisplay extends Component {
 
       
     }
+  }
+
+  handlePomodoroComplete() {
+
+    // console.log(this.props.userSettings);
+    var payload = {
+      username: this.props.userSettings.username,
+      userId: this.props.userSettings.userId,
+      characterNum: this.props.userSettings.characterNum
+    };
+
+    console.log(payload);
+
+    fetch('https://serene-escarpment-46084.herokuapp.com/handlePomodoroFinish', {
+      method: 'post',
+      mode: 'cors',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    }).then(function(res) {
+      return res.text();
+    })
+    .then(function(res) {
+      console.log(res);
+    }).catch(function(err) {
+      console.log(err);
+    });
   }
 
   render() {
