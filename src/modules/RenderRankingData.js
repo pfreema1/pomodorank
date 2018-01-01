@@ -1,18 +1,38 @@
 import * as d3 from 'd3';
 /* funny text faces */
 import funnyFacesArray from '../modules/FunnyFacesArray';
+import tomatoIcon from '../images/tomatoIcon.png';
 
 
 export default function renderRankingData(width, height, data) {
+
+    var chart = document.querySelector("#chart");
+    var aspect = chart.getBoundingClientRect().width / chart.getBoundingClientRect().height;
+    var container = chart.parentElement;
+    console.log(container);
     
     //create canvas
     var canvas = d3
         .select(".data-vis-wrapper")
         .append("svg")
+        .attr("id", "chart")
         .attr("width", width)
         .attr("height", height)
+        //responsive svg needs these 2 attributes and no width or height
+        .attr("viewBox", "0 0 " + width + " " + height)
+        .attr("preserveAspectRatio", "xMidYMid meet")
         .append("g")
-        .attr("transform", "translate(0, 0)");
+        .attr("transform", "translate(-100, 0)")
+        .on("resize", function() {
+            
+            var targetWidth = container.getBoundingClientRect().width;
+            console.log(targetWidth);
+        });
+
+
+    
+
+    
 
 
     // Charge Function
@@ -39,7 +59,7 @@ export default function renderRankingData(width, height, data) {
     var damper = 0.102;
 
     // These will be set in create_nodes and create_vis
-    var svg = null;
+    // var svg = null;
     var bubbles = null;
     var nodes = [];
 
@@ -96,7 +116,7 @@ export default function renderRankingData(width, height, data) {
     force.nodes(nodes);
 
     //bind nodes data to what will become dom elements to represent them
-    var bubbles = canvas.selectAll(".bubble")
+    bubbles = canvas.selectAll(".bubble")
         .data(nodes, function(d) { return d.username; });
 
     // Define the div for the tooltip
@@ -119,7 +139,7 @@ export default function renderRankingData(width, height, data) {
                 .duration(200)
                 .style("opacity", 1)
                 .style("display", "inline");
-            div.html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>pomodoros:  " + d.pomodoros + "</div>")
+            div.html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
                 .style("position", "absolute")
                 .style("left", (d3.event.pageX - 34) + "px")
                 .style("top", (d3.event.pageY - 12) + "px");

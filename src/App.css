@@ -97,8 +97,9 @@ body{
 }
 
 .time-display-wrapper {
-  width: 50%;
-  margin-left: 200px;
+  width: 30%;
+  padding-left: 200px;
+  // margin-left: 200px;
 }
 
 .time-and-play-reset-button-container {
@@ -182,7 +183,7 @@ body{
 
 @keyframes fade-glow-anim {
   from {color: var(--highlightButtonColor);}
-  to {color: var(--mainTextColor);} 
+  to {color: white;} 
 
 }
 
@@ -490,20 +491,38 @@ code {
   // width: 100vw;
   color: white;
   letter-spacing: 1px;
-  padding: 20px;
+  width: 70%;
+  // padding: 20px;
 }
 
 .tooltip {
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
   position: absolute;
   pointer-events: none;
+  text-align: center;
+  background-color: #EAEAEA;
+  border-radius: var(--borderRoundness);
+  padding: 20px;
 }
 
 .tooltip div {
   font-family: var(--primaryFont);
+  margin-top: 20px;
+  line-height: 25px;
+}
+
+.hover-tomato-icon {
+  width: 15px;
+  height: 15px;
 }
 
 .data-vis-wrapper {
-  // width: 50%;
-  // left: 0;
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  padding-bottom: 50%; /* aspect ratio */
+  vertical-align: top;
+  overflow: hidden;
 }
+
+
