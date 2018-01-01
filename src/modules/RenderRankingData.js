@@ -6,10 +6,7 @@ import tomatoIcon from '../images/tomatoIcon.png';
 
 export default function renderRankingData(width, height, data) {
 
-    var chart = document.querySelector("#chart");
-    var aspect = chart.getBoundingClientRect().width / chart.getBoundingClientRect().height;
-    var container = chart.parentElement;
-    console.log(container);
+   
     
     //create canvas
     var canvas = d3
@@ -19,18 +16,16 @@ export default function renderRankingData(width, height, data) {
         .attr("width", width)
         .attr("height", height)
         //responsive svg needs these 2 attributes and no width or height
-        .attr("viewBox", "0 0 " + width + " " + height)
-        .attr("preserveAspectRatio", "xMidYMid meet")
+        // .attr("viewBox", "0 0 " + width + " " + height)
+        // .attr("preserveAspectRatio", "xMidYMid meet")
         .append("g")
-        .attr("transform", "translate(-100, 0)")
-        .on("resize", function() {
-            
-            var targetWidth = container.getBoundingClientRect().width;
-            console.log(targetWidth);
-        });
+        .attr("transform", "translate(0, 0)");
+
+    var chart = document.querySelector("#chart");
+    var aspect = chart.getBoundingClientRect().width / chart.getBoundingClientRect().height;
+    var container = chart.parentElement;
 
 
-    
 
     
 
@@ -88,8 +83,8 @@ export default function renderRankingData(width, height, data) {
                 characterNum: d.characterNum,
                 radius: radiusScale(+d.pomodoros),
                 value: d.pomodoros,
-                x: Math.random() * 900,
-                y: Math.random() * 800
+                x: Math.random() * width,
+                y: Math.random() * height
             };
         });
         
@@ -106,7 +101,7 @@ export default function renderRankingData(width, height, data) {
     
     //set radius scales' max: based on pomodoro amount
     var maxAmount = d3.max(nodes, function(d) {
-        console.log(d.value);
+        // console.log(d.value);
         return +d.value;
     });
 
@@ -136,9 +131,9 @@ export default function renderRankingData(width, height, data) {
         .on("mouseover", function(d) {
             // console.log("mousing over@");
             div.transition()
-                .duration(200)
-                .style("opacity", 1)
-                .style("display", "inline");
+                .duration(500)
+                .style("opacity", 1);
+
             div.html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
                 .style("position", "absolute")
                 .style("left", (d3.event.pageX - 34) + "px")
@@ -153,8 +148,11 @@ export default function renderRankingData(width, height, data) {
                 .style("opacity", 1);
         })
         .on("mouseout", function(d) {
-            // console.log("mouse leaves running");  
-            div.style("display", "none");
+            // div.style("display", "none");
+            div.transition()
+                .duration(300)
+                .style("opacity", 0);
+
         });
 
 

@@ -75,8 +75,11 @@ class RankingsDataVis extends Component {
             return response.json();
         }).then(function(response) {
             data = response;
+
+            let width = document.documentElement.clientWidth * .7;
+            let height = document.documentElement.clientHeight;
             
-            renderRankingData(1000, 600, data);
+            renderRankingData(width, height, data);
 
         }).catch(function(err) {
             console.log(err);

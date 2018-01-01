@@ -98,7 +98,7 @@ body{
 
 .time-display-wrapper {
   width: 30%;
-  padding-left: 200px;
+  // padding-left: 200px;
   // margin-left: 200px;
 }
 
@@ -503,6 +503,7 @@ code {
   background-color: #EAEAEA;
   border-radius: var(--borderRoundness);
   padding: 20px;
+  
 }
 
 .tooltip div {
