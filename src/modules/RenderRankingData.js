@@ -130,8 +130,10 @@ export default function renderRankingData(width, height, data) {
         .enter()
         .append("circle")
         .classed("bubble", true)
-        .attr('r', 0)
-        .attr('fill', function(d) { return colorScale(d.pomodoros) })
+        .attr("r", 0)
+        .attr("fill", function(d) { return colorScale(d.pomodoros) })
+        .attr("stroke", "#3D4453")
+        .attr("stroke-width", 2)
         .on("mouseover", function(d) {
             // console.log("mousing over@");
             div.transition()

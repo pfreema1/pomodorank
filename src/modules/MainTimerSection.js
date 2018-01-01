@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 /* images */
 import tomatoIcon from '../images/tomatoIcon.png';
 import tomatoIconGlow from '../images/tomatoIconGlow_withBlur.png';
+import tomatoIconWhite from '../images/tomatoIconWhite.png';
 
 
 
@@ -288,7 +289,7 @@ class TimeDisplay extends Component {
   render() {
     return (
       <div
-        className={"box-shadow time-display " + (this.state.fadeGlow ? "glow-fade" : "")}
+        className={"add-border box-shadow time-display " + (this.state.fadeGlow ? "glow-fade" : "")}
       >
         {this.state.formattedTimeString}
       </div>
@@ -299,7 +300,7 @@ class TimeDisplay extends Component {
 class PlayPauseResetButtons extends Component {
   render() {
     return (
-      <div className="play-pause-reset-buttons-container box-shadow">
+      <div className="play-pause-reset-buttons-container box-shadow add-border">
         <PlayAndPauseButton
           isRunning={this.props.isRunning}
           playPauseHandler={this.props.playPauseHandler}
@@ -404,7 +405,7 @@ class ResetButton extends Component {
 class TimeModeSelect extends Component {
   render() {
     return (
-      <div className="time-mode-select-container box-shadow">
+      <div className="time-mode-select-container box-shadow add-border">
         <PomodoroButton
           handleTimerModeClick={this.props.handleTimerModeClick}
           timerMode={this.props.timerMode}
@@ -442,7 +443,7 @@ class PomodoroButton extends Component {
         <img src={tomatoIconGlow} className="tomato-icon" alt="tomato icon" />
       );
     } else {
-      icon = <img src={tomatoIcon} className="tomato-icon" alt="tomato icon" />;
+      icon = <img src={tomatoIconWhite} className="tomato-icon" alt="tomato icon" />;
     }
 
     return (
