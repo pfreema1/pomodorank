@@ -45,6 +45,8 @@ export default function renderRankingData(width, height, data) {
 
     var colorScale = d3.scale.category20c();
 
+ 
+
     // Sizes bubbles based on their area instead of raw radius
     var radiusScale = d3.scale.pow()
         .exponent(0.5)
@@ -79,7 +81,7 @@ export default function renderRankingData(width, height, data) {
         return myNodes;
     }
 
-    var nodes = createNodes(data.children);
+    nodes = createNodes(data.children);
 
     
     //set radius scales' max: based on pomodoro amount
@@ -111,26 +113,28 @@ export default function renderRankingData(width, height, data) {
         .classed("bubble", true)
         .attr('r', 0)
         .attr('fill', function(d) { return colorScale(d.pomodoros) })
-        .on("mouseenter", function(d) {
-            console.log("mousing over@");
+        .on("mouseover", function(d) {
+            // console.log("mousing over@");
             div.transition()
                 .duration(200)
-                .style("opacity", 1);
+                .style("opacity", 1)
+                .style("display", "inline");
             div.html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>pomodoros:  " + d.pomodoros + "</div>")
                 .style("position", "absolute")
                 .style("left", (d3.event.pageX - 34) + "px")
                 .style("top", (d3.event.pageY - 12) + "px");
         })
         .on('mousemove', function() {
-            console.log(d3.event.pageX); // log the mouse x,y position
+            // console.log(d3.event.pageX); // log the mouse x,y position
 
             div
-                .style("left", (d3.event.pageX - 34) + "px")
-                .style("top", (d3.event.pageY - 12) + "px")
+                .style("left", (d3.event.pageX - 100) + "px")
+                .style("top", (d3.event.pageY - 50) + "px")
                 .style("opacity", 1);
         })
-        .on("mouseleave", function(d) {
-            console.log("mouse leaves running");  
+        .on("mouseout", function(d) {
+            // console.log("mouse leaves running");  
+            div.style("display", "none");
         });
 
 
@@ -150,7 +154,7 @@ export default function renderRankingData(width, height, data) {
     */
     function groupBubbles() {
         force.on("tick", function(e) {
-            console.log(e);
+            // console.log(e);
             bubbles.each(moveToCenter(e.alpha))
                 .attr("cx", function(d) { return d.x; })
                 .attr("cy", function(d) { return d.y; });

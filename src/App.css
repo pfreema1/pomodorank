@@ -488,6 +488,8 @@ code {
 
 .tooltip {
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  position: absolute;
+  pointer-events: none;
 }
 
 .tooltip div {
