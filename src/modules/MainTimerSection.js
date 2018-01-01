@@ -288,7 +288,7 @@ class TimeDisplay extends Component {
   render() {
     return (
       <div
-        className={"time-display " + (this.state.fadeGlow ? "glow-fade" : "")}
+        className={"box-shadow time-display " + (this.state.fadeGlow ? "glow-fade" : "")}
       >
         {this.state.formattedTimeString}
       </div>

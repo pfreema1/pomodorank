@@ -21,9 +21,9 @@ export default function renderRankingData(width, height, data) {
         .append("g")
         .attr("transform", "translate(0, 0)");
 
-    var chart = document.querySelector("#chart");
-    var aspect = chart.getBoundingClientRect().width / chart.getBoundingClientRect().height;
-    var container = chart.parentElement;
+    // var chart = document.querySelector("#chart");
+    // var aspect = chart.getBoundingClientRect().width / chart.getBoundingClientRect().height;
+    // var container = chart.parentElement;
 
 
 
@@ -119,6 +119,10 @@ export default function renderRankingData(width, height, data) {
         .attr("class", "tooltip")				
         .style("opacity", 0);
 
+    var secondDiv = d3.select("body").append("div")	
+        .attr("class", "tooltip")				
+        .style("opacity", 0);
+
     //create new circle elements each with class `bubble`.
     //there will be on circle.bubble for each object in the nodes array
     //initially, their radius (r attribute) will be 0.
@@ -201,10 +205,56 @@ export default function renderRankingData(width, height, data) {
     }
 
 
+    /**
+     * Returns a random integer between min (inclusive) and max (inclusive)
+     * Using Math.round() will give you a non-uniform distribution!
+     */
+    function getRandomInt(min, max) {
+        let randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+        // console.log("randomNum from random function:  " + randomNum);
+        return randomNum;
+    }
+
+    // helper function to run the cycle through users, but end after "repetitions"
+    function setIntervalX(callback, delay, repetitions) {
+        var x = 0;
+        var intervalID = window.setInterval(function () {
+    
+           callback();
+    
+           if (++x === repetitions) {
+               window.clearInterval(intervalID);
+           }
+        }, delay);
+    }
 
 
+    setIntervalX(function() {
+        // console.log(d3.max(nodes));
+        
+        var randomNum = getRandomInt(0, nodes.length - 1);
+        // var tooltipCoords = 0;
+        // console.log(nodes);
+        var randomNode = nodes[randomNum];
 
+        // console.log(nodes.length);
 
+        //offset left by the percentage the container takes up
+        //30% off of the left
+        var leftOffset = document.documentElement.clientWidth * .3;
+
+        secondDiv.html(funnyFacesArray[randomNode.characterNum] + "<br/><div>" + randomNode.username + "<br/>" + randomNode.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
+            .style("position", "absolute")
+            .style("left", (randomNode.x + leftOffset) + "px")
+            .style("top", (randomNode.y - 12) + "px")
+            .style("opacity", 1)
+            .transition()
+            .duration(2000)
+            .style("opacity", 0);
+
+    }, 2500, 15);
+
+  
 
 
 }
