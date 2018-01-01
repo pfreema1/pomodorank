@@ -486,5 +486,11 @@ code {
   padding: 20px;
 }
 
+.tooltip {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
 
+.tooltip div {
+  font-family: var(--primaryFont);
+}
 
