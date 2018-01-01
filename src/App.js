@@ -302,10 +302,11 @@ class App extends Component {
             notificationSetting={this.state.userSettings.notifications}
             userSettings={this.state.userSettings}
           />
+          <RankingsSection 
+            userSettings={this.state.userSettings}
+          />
         </div>
-        <RankingsSection 
-          userSettings={this.state.userSettings}
-        />
+        
       </div>
     );
   }

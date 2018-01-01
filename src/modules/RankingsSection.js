@@ -35,7 +35,7 @@ class RankingsSection extends Component {
 
     render() {
         return(
-            <div className="rankings-container box-shadow">
+            <div className="rankings-container">
                 <RankingsDataVis />
 
             </div>
@@ -76,7 +76,7 @@ class RankingsDataVis extends Component {
         }).then(function(response) {
             data = response;
             
-            renderRankingData(800, 600, data);
+            renderRankingData(1000, 600, data);
 
         }).catch(function(err) {
             console.log(err);

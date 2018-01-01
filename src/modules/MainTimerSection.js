@@ -66,7 +66,7 @@ class MainTimerSection extends Component {
 
   render() {
     return (
-      <div onClick={this.handleClick}>
+      <div className="time-display-wrapper" onClick={this.handleClick}>
         <div className="time-and-play-reset-button-container">
         
           <TimeDisplay

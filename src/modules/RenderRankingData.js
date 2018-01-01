@@ -12,7 +12,7 @@ export default function renderRankingData(width, height, data) {
         .attr("width", width)
         .attr("height", height)
         .append("g")
-        .attr("transform", "translate(50, 50)");
+        .attr("transform", "translate(0, 0)");
 
 
     // Charge Function
