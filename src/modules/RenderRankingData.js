@@ -15,25 +15,8 @@ export default function renderRankingData(width, height, data) {
         .attr("id", "chart")
         .attr("width", width)
         .attr("height", height)
-        //responsive svg needs these 2 attributes and no width or height
-        // .attr("viewBox", "0 0 " + width + " " + height)
-        // .attr("preserveAspectRatio", "xMidYMid meet")
         .append("g")
         .attr("transform", "translate(0, 0)");
-
-    // var chart = document.querySelector("#chart");
-    // var aspect = chart.getBoundingClientRect().width / chart.getBoundingClientRect().height;
-    // var container = chart.parentElement;
-
-
-
-    
-
-
-    // Charge Function
-    function charge(d) {
-        return -Math.pow(d.r, 2.0) / 8;
-    }
 
     var force = d3.layout.force()
         .size([width, height - 60])
@@ -53,8 +36,10 @@ export default function renderRankingData(width, height, data) {
     // moving around nodes
     var damper = 0.102;
 
+    //controls max size of circles
+    var radiusOfHighestRank = 100;
+
     // These will be set in create_nodes and create_vis
-    // var svg = null;
     var bubbles = null;
     var nodes = [];
 
@@ -62,15 +47,34 @@ export default function renderRankingData(width, height, data) {
 
  
 
-    // Sizes bubbles based on their area instead of raw radius
-    var radiusScale = d3.scale.pow()
-        .exponent(0.5)
-        .range([2, 85]);
-
-
+    //set initial values for tooltips
+    var scrollingToolTips = d3.select("body").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0)
+    .style("transform", "scale(0,0)")
+    .style("transform-origin", "bottom left");
 
     
 
+    nodes = createNodes(data.children);
+
+    //set radius scales' max: based on pomodoro amount
+    var maxAmount = d3.max(nodes, function(d) {
+        // console.log(d.value);
+        return +d.value;
+    });
+
+    var radiusScale = d3.scale.pow()
+        .exponent(0.5)
+        .domain([0, maxAmount])
+        .range([0, radiusOfHighestRank]);
+    
+
+
+
+    /*
+    *   create nodes with data
+    */
     function createNodes(data) {
         
         var myNodes = data.map(function(d) {
@@ -81,10 +85,10 @@ export default function renderRankingData(width, height, data) {
                 pomodoros: d.pomodoros,
                 lastPomodoro: d.lastPomodoro,
                 characterNum: d.characterNum,
-                radius: radiusScale(+d.pomodoros),
+                radius: d.pomodoros,
                 value: d.pomodoros,
                 x: Math.random() * width,
-                y: Math.random() * height
+                y: Math.random() * height-60
             };
         });
         
@@ -96,32 +100,21 @@ export default function renderRankingData(width, height, data) {
         return myNodes;
     }
 
-    nodes = createNodes(data.children);
 
-    
-    //set radius scales' max: based on pomodoro amount
-    var maxAmount = d3.max(nodes, function(d) {
-        // console.log(d.value);
-        return +d.value;
-    });
-
-    radiusScale.domain([0, maxAmount]);
 
     // Set the force's nodes to our newly created nodes array.
     force.nodes(nodes);
 
     //bind nodes data to what will become dom elements to represent them
     bubbles = canvas.selectAll(".bubble")
-        .data(nodes, function(d) { return d.username; });
+        .data(nodes);
 
     // Define the div for the tooltip
     var div = d3.select("body").append("div")	
         .attr("class", "tooltip")				
         .style("opacity", 0);
 
-    var secondDiv = d3.select("body").append("div")	
-        .attr("class", "tooltip")				
-        .style("opacity", 0);
+    
 
     //create new circle elements each with class `bubble`.
     //there will be on circle.bubble for each object in the nodes array
@@ -130,6 +123,7 @@ export default function renderRankingData(width, height, data) {
         .enter()
         .append("circle")
         .classed("bubble", true)
+        .attr("id", function(d) { return d.userId; })
         .attr("r", 0)
         .attr("fill", function(d) { return colorScale(d.pomodoros) })
         .attr("stroke", "#3D4453")
@@ -166,10 +160,21 @@ export default function renderRankingData(width, height, data) {
     //correct radius
     bubbles.transition()
         .duration(2000)
-        .attr("r", function(d) { return d.pomodoros; });
+        .attr("r", function(d) { 
+            // console.log("radiusScale(+d.pomodoros):  " + radiusScale(+d.pomodoros));
+            return radiusScale(+d.pomodoros); 
+        });
 
     //set initial layout to single group
     groupBubbles();
+
+
+
+
+
+
+
+
 
     /*
     *   sets visualization in "single group mode"
@@ -207,17 +212,28 @@ export default function renderRankingData(width, height, data) {
     }
 
 
-    /**
+    /*
      * Returns a random integer between min (inclusive) and max (inclusive)
      * Using Math.round() will give you a non-uniform distribution!
      */
     function getRandomInt(min, max) {
         let randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
-        // console.log("randomNum from random function:  " + randomNum);
+        // if(randomNum == 13) {
+        //     randomNum = randomNum - 1;
+        // }
         return randomNum;
     }
 
-    // helper function to run the cycle through users, but end after "repetitions"
+    /*
+    *   charge function
+    */
+    function charge(d) {
+        return -Math.pow(d.r, 2.0) / 8;
+    }
+
+    /*
+    *   helper function to run the cycle through users, but end after "repetitions"
+    */
     function setIntervalX(callback, delay, repetitions) {
         var x = 0;
         var intervalID = window.setInterval(function () {
@@ -230,7 +246,9 @@ export default function renderRankingData(width, height, data) {
         }, delay);
     }
 
-
+    /*
+    *   interval function to randomly show user profiles for X amount of times
+    */
     setIntervalX(function() {
         // console.log(d3.max(nodes));
         
@@ -239,22 +257,59 @@ export default function renderRankingData(width, height, data) {
         // console.log(nodes);
         var randomNode = nodes[randomNum];
 
-        // console.log(nodes.length);
 
-        //offset left by the percentage the container takes up
+
+        
+
+        //offset left by the percentage the container takes up 
         //30% off of the left
         var leftOffset = document.documentElement.clientWidth * .3;
 
-        secondDiv.html(funnyFacesArray[randomNode.characterNum] + "<br/><div>" + randomNode.username + "<br/>" + randomNode.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
+        
+
+
+        //scroll through users
+        scrollingToolTips
+            .html(funnyFacesArray[randomNode.characterNum] + "<br/><div>" + randomNode.username + "<br/>" + randomNode.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
             .style("position", "absolute")
             .style("left", (randomNode.x + leftOffset) + "px")
-            .style("top", (randomNode.y - 12) + "px")
-            .style("opacity", 1)
+            .style("top", (randomNode.y - 50) + "px")
             .transition()
-            .duration(2000)
-            .style("opacity", 0);
+                .duration(500)
+                .style("transform", "scale(1,1)")
+                .style("opacity", 1)
+            .transition()
+                .duration(4000)
+                .style("opacity", 0);
 
-    }, 2500, 15);
+
+
+
+        //
+        //animate bubble
+        //
+        var bubbleToAnimateEl = document.getElementById(nodes[randomNum].userId);
+
+        var originalBubbleRadius = nodes[randomNum].radius;
+        
+        d3.select(bubbleToAnimateEl)
+            .transition()
+            .duration(1000)
+            .attr("r", function(d) {
+                console.log(d);
+                return (originalBubbleRadius * .7);
+            })
+            .transition()
+            .duration(1000)
+            .attr("r", function(d){
+                return originalBubbleRadius;
+            });
+    
+
+        
+            
+
+    }, 5000, 15);
 
   
 
