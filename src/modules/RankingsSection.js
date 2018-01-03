@@ -16,22 +16,6 @@ class RankingsSection extends Component {
 
     }
 
-    
-
-    // //post db document to database 
-    // fetch('https://serene-escarpment-46084.herokuapp.com/', {
-    //     method: 'post',
-    //     mode: 'cors',
-    //     headers: {
-    //         'Accept': 'application/json, text/plain, */*',
-    //         'Content-Type': 'application/json'
-    //         },
-    //     body: JSON.stringify(dbDocument)
-    // }).then(function(res) {
-    //     return res.text;
-    // })
-    // .then(res => console.log(res));
-
 
     render() {
         return(

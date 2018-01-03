@@ -18,12 +18,18 @@ export default function renderRankingData(width, height, data) {
         .append("g")
         .attr("transform", "translate(0, 0)");
 
+
+    var widthToChargeScale = d3.scale.linear()
+    .domain([0, 900])
+    .range([0, -800]);
+
+    //create layout
     var force = d3.layout.force()
         .size([width, height - 60])
-        .charge(charge)
+        // .charge(charge)
         .gravity(-0.01)
         .friction(0.59)
-        .charge(-800);
+        .charge(widthToChargeScale(width));
 
 
         
@@ -36,8 +42,15 @@ export default function renderRankingData(width, height, data) {
     // moving around nodes
     var damper = 0.102;
 
+    //setup a scale for max radius:  880px wide canvas = 100 max radius
+    var widthToRadiusScale = d3.scale.linear()
+        .domain([0, 900])
+        .range([20, 100]);
+
+    // console.log("widthToRadiusScale(500)" + widthToRadiusScale(100));
+
     //controls max size of circles
-    var radiusOfHighestRank = 100;
+    var radiusOfHighestRank = widthToRadiusScale(width);
 
     // These will be set in create_nodes and create_vis
     var bubbles = null;
@@ -49,20 +62,31 @@ export default function renderRankingData(width, height, data) {
 
     //set initial values for tooltips
     var scrollingToolTips = d3.select("body").append("div")	
-    .attr("class", "tooltip")				
-    .style("opacity", 0)
-    .style("transform", "scale(0,0)")
-    .style("transform-origin", "bottom left");
+        .attr("class", "tooltip")				
+        .style("opacity", 0)
+        .style("transform", "scale(0,0)")
+        .style("transform-origin", "bottom left");
 
     
 
-    nodes = createNodes(data.children);
+    
 
     //set radius scales' max: based on pomodoro amount
-    var maxAmount = d3.max(nodes, function(d) {
-        // console.log(d.value);
-        return +d.value;
-    });
+    // var maxAmount = d3.max(nodes, function(d) {
+    //     // console.log(d.value);
+    //     return +d.value;
+    // });
+
+    //find max pomodoro amount in data
+    var maxAmount = data.children.reduce(function(prevVal, elem, index) {
+        if(elem.pomodoros > prevVal) {
+            return elem.pomodoros;
+        } else {
+            return prevVal;
+        }
+    }, 0);
+    
+    
 
     var radiusScale = d3.scale.pow()
         .exponent(0.5)
@@ -85,7 +109,7 @@ export default function renderRankingData(width, height, data) {
                 pomodoros: d.pomodoros,
                 lastPomodoro: d.lastPomodoro,
                 characterNum: d.characterNum,
-                radius: d.pomodoros,
+                radius: radiusScale(d.pomodoros),
                 value: d.pomodoros,
                 x: Math.random() * width,
                 y: Math.random() * height-60
@@ -101,6 +125,8 @@ export default function renderRankingData(width, height, data) {
     }
 
 
+    nodes = createNodes(data.children);
+
 
     // Set the force's nodes to our newly created nodes array.
     force.nodes(nodes);
@@ -115,6 +141,8 @@ export default function renderRankingData(width, height, data) {
         .style("opacity", 0);
 
     
+
+
 
     //create new circle elements each with class `bubble`.
     //there will be on circle.bubble for each object in the nodes array
@@ -161,7 +189,6 @@ export default function renderRankingData(width, height, data) {
     bubbles.transition()
         .duration(2000)
         .attr("r", function(d) { 
-            // console.log("radiusScale(+d.pomodoros):  " + radiusScale(+d.pomodoros));
             return radiusScale(+d.pomodoros); 
         });
 
@@ -227,9 +254,9 @@ export default function renderRankingData(width, height, data) {
     /*
     *   charge function
     */
-    function charge(d) {
-        return -Math.pow(d.r, 2.0) / 8;
-    }
+    // function charge(d) {
+    //     return -Math.pow(d.r, 2.0) / 8;
+    // }
 
     /*
     *   helper function to run the cycle through users, but end after "repetitions"
@@ -291,16 +318,17 @@ export default function renderRankingData(width, height, data) {
         var bubbleToAnimateEl = document.getElementById(nodes[randomNum].userId);
 
         var originalBubbleRadius = nodes[randomNum].radius;
+      
         
         d3.select(bubbleToAnimateEl)
             .transition()
-            .duration(1000)
+            .duration(300)
             .attr("r", function(d) {
-                console.log(d);
                 return (originalBubbleRadius * .7);
             })
             .transition()
             .duration(1000)
+            .ease("elastic")
             .attr("r", function(d){
                 return originalBubbleRadius;
             });
@@ -311,7 +339,7 @@ export default function renderRankingData(width, height, data) {
 
     }, 5000, 15);
 
-  
+    
 
 
 }

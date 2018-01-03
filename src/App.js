@@ -35,7 +35,8 @@ class App extends Component {
         isNewNotificationSupported: this.isNewNotificationSupported(),
         notifications: window.Notification && Notification.permission === "granted" ? true : false
       },
-      firstClickHasBeenClicked: false
+      firstClickHasBeenClicked: false,
+      flashNotice: false
     };
 
     this.audio = new Audio();
@@ -194,6 +195,8 @@ class App extends Component {
 
   handleSettingsButtonClick() {
 
+    
+
     this.setState({
       settingsCogClicked: true
     });
@@ -232,6 +235,14 @@ class App extends Component {
 
   }
 
+
+  // //reset state of flash notice
+  // resetFlashState() {
+  //   this.setState({
+  //     flashNotice: false
+  //   });
+  // }
+
   handleUsernameChange(newName, charNum) {
 
     this.setState({
@@ -240,7 +251,8 @@ class App extends Component {
         ...this.state.userSettings,
         username: newName,
         characterNum: charNum
-      }
+      },
+      flashNotice: true
     }, function() {
       //user clicked submit button, lets send that data to API endpoint to 
       //update the document (entry) in db
@@ -274,8 +286,16 @@ class App extends Component {
     this.createCookie("username", newName, 7);
     this.createCookie("characterNum", charNum, 7);
 
-
+    //run a method to reset the flash state
+    //using arrow function so context of this doesnt change!
+    setTimeout( () => {
+      this.setState({
+        flashNotice: false
+      });
+    }, 3000);
   }
+
+  
 
   render() {
     return (
@@ -286,7 +306,7 @@ class App extends Component {
             settingsChange={this.handleSettingsChange}
             userSettings={this.state.userSettings} 
             handleUsernameChange={this.handleUsernameChange} 
-            
+            flashNotice={this.state.flashNotice}
           />
           <HeaderSection 
             handleSettingsButtonClick={this.handleSettingsButtonClick}

@@ -55,6 +55,10 @@ class SettingsOverlay extends Component {
                     (this.state.fadeGlow ? "glow-fade" : "")}></i>
                 </div>
 
+                <SubmitFlashNotice 
+                    flashNotice={this.props.flashNotice}
+                />
+
                 <div className="settings-header">
                     Settings
                 </div>
@@ -333,6 +337,40 @@ class NotificationsCard extends Component {
     }
 }
 
+
+class SubmitFlashNotice extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            showNotice: false
+        };
+
+    }
+
+    componentWillReceiveProps(nextProps) {
+
+        if(nextProps.flashNotice) {
+            this.setState({
+                showNotice: true
+            });
+        } else {
+            this.setState({
+                showNotice: false
+            });
+        }
+    }
+
+    render() {
+        return(
+            <div className={"submit-flash-notice-container " + (this.state.showNotice ? "flash-notice-fade" : "")}>
+                <div className="submit-flash-notice box-shadow-normal">
+                    Profile Saved!
+                </div>
+            </div>
+        );
+    }
+}
 
 
 
