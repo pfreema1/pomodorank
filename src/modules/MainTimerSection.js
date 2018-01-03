@@ -241,8 +241,10 @@ class TimeDisplay extends Component {
         setTimeout(n.close.bind(n), 4000);
       }
 
-      //take care of tracking pomodoros
-      this.handlePomodoroComplete();
+
+      //if timer mode is Pomodoro, take care of tracking pomodoros (fetch)
+      if(this.props.timerMode === 25)
+        this.handlePomodoroComplete();
 
     } else if (this.props.isRunning) {
       let currentSeconds = this.state.seconds - 1;
