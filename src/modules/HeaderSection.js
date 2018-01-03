@@ -9,7 +9,7 @@ class HeaderSection extends Component {
 
     render() {
         return(
-            <div className="header-bar box-shadow">
+            <div className="header-bar">
                 <HeaderLogo />
                 <HeaderSettingsButton 
                     handleSettingsButtonClick={this.props.handleSettingsButtonClick}

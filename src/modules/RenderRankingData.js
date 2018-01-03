@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 /* funny text faces */
 import funnyFacesArray from '../modules/FunnyFacesArray';
 import tomatoIcon from '../images/tomatoIcon.png';
+import { select } from 'd3';
 
 
 export default function renderRankingData(width, height, data) {
@@ -20,8 +21,8 @@ export default function renderRankingData(width, height, data) {
 
 
     var widthToChargeScale = d3.scale.linear()
-    .domain([0, 900])
-    .range([0, -800]);
+        .domain([200, 900])
+        .range([0, -800]);
 
     //create layout
     var force = d3.layout.force()
@@ -37,6 +38,8 @@ export default function renderRankingData(width, height, data) {
     // Locations to move bubbles towards, depending
     // on which view mode is selected.
     var center = { x: width / 2, y: height / 2 };
+
+    // console.log(center);
 
     // Used when setting up force and
     // moving around nodes
@@ -61,11 +64,11 @@ export default function renderRankingData(width, height, data) {
  
 
     //set initial values for tooltips
-    var scrollingToolTips = d3.select("body").append("div")	
+    var scrollingToolTips = d3.select(".data-vis-wrapper").append("div")	
         .attr("class", "tooltip")				
         .style("opacity", 0)
         .style("transform", "scale(0,0)")
-        .style("transform-origin", "bottom left");
+        .style("transform-origin", "top left");
 
     
 
@@ -136,7 +139,7 @@ export default function renderRankingData(width, height, data) {
         .data(nodes);
 
     // Define the div for the tooltip
-    var div = d3.select("body").append("div")	
+    var clickToolTip = d3.select("body").append("div")	
         .attr("class", "tooltip")				
         .style("opacity", 0);
 
@@ -157,27 +160,34 @@ export default function renderRankingData(width, height, data) {
         .attr("stroke", "#3D4453")
         .attr("stroke-width", 3)
         .on("mouseover", function(d) {
-            // console.log("mousing over@");
-            div.transition()
+            console.log("mousing over@");
+            clickToolTip.transition()
                 .duration(500)
                 .style("opacity", 1);
 
-            div.html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
+            clickToolTip.html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
                 .style("position", "absolute")
-                .style("left", (d3.event.pageX - 34) + "px")
-                .style("top", (d3.event.pageY - 12) + "px");
+                .style("left", (d3.touches.x) + "px")
+                .style("top", (d3.touches.y) + "px")
+                .call(function(selection) {
+                    var element = selection[0][0];
+
+                    console.log(element);
+                    console.log(d3.touches.x);
+                    console.log(element.getBoundingClientRect().left);
+                });
         })
         .on('mousemove', function() {
             // console.log(d3.event.pageX); // log the mouse x,y position
 
-            div
+            clickToolTip
                 .style("left", (d3.event.pageX - 100) + "px")
                 .style("top", (d3.event.pageY - 50) + "px")
                 .style("opacity", 1);
         })
         .on("mouseout", function(d) {
             // div.style("display", "none");
-            div.transition()
+            clickToolTip.transition()
                 .duration(300)
                 .style("opacity", 0);
 
@@ -290,17 +300,22 @@ export default function renderRankingData(width, height, data) {
 
         //offset left by the percentage the container takes up 
         //30% off of the left
+        //
         var leftOffset = document.documentElement.clientWidth * .3;
+        var topOffset = 0;
 
-        
+        if(document.documentElement.clientWidth < 1200) {
+            leftOffset = 0;
+
+        }
 
 
         //scroll through users
         scrollingToolTips
             .html(funnyFacesArray[randomNode.characterNum] + "<br/><div>" + randomNode.username + "<br/>" + randomNode.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
             .style("position", "absolute")
-            .style("left", (randomNode.x + leftOffset) + "px")
-            .style("top", (randomNode.y - 50) + "px")
+            .style("left", (randomNode.x) + "px")
+            .style("top", (randomNode.y) + "px")
             .transition()
                 .duration(500)
                 .style("transform", "scale(1,1)")

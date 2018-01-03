@@ -314,14 +314,15 @@ class App extends Component {
             firstClickHasBeenClicked={this.state.firstClickHasBeenClicked}  
           />
         <div className="main-container">
-          
-          <MainTimerSection 
-            handleSound={this.handleSoundPlaying}            
-            handleFirstClick={this.firstClickHandler}
-            firstClickHasBeenClicked={this.state.firstClickHasBeenClicked}  
-            notificationSetting={this.state.userSettings.notifications}
-            userSettings={this.state.userSettings}
-          />
+          <div className="main-timer-section-wrapper">
+            <MainTimerSection 
+              handleSound={this.handleSoundPlaying}            
+              handleFirstClick={this.firstClickHandler}
+              firstClickHasBeenClicked={this.state.firstClickHasBeenClicked}  
+              notificationSetting={this.state.userSettings.notifications}
+              userSettings={this.state.userSettings}
+            />
+          </div>  
           <RankingsSection 
             userSettings={this.state.userSettings}
           />

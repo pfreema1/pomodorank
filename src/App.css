@@ -87,6 +87,10 @@ body{
   color: var(--mainTextColor);
 }
 
+#root {
+  overflow: hidden;
+}
+
 .main-container {
   // display: flex;
   justify-content: center;
@@ -99,8 +103,17 @@ body{
 
 .time-display-wrapper {
   width: 100%;
+  // height: 60vh;
   // padding-left: 200px;
   // margin-left: 200px;
+}
+
+.main-timer-section-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30vh;
+  margin-top: 100px;
 }
 
 .time-and-play-reset-button-container {
@@ -518,6 +531,7 @@ code {
   border-radius: var(--borderRoundness);
   padding: 20px;
   white-space: nowrap;
+  color: var(--mainTextColor);
 }
 
 .tooltip div {
