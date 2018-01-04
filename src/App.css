@@ -608,6 +608,22 @@ svg#chart {
   overflow: visible;
 }
 
+.o-base {
+  padding: 10px;
+}
+
+.o-1 {
+  color: #736CAC;
+}
+
+.o-2 {
+  color: #F2B176;
+}
+
+.o-3 {
+  color: #54A05C;
+}
+
 
 /*
   for large screens:

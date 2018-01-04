@@ -166,6 +166,19 @@ export default function renderRankingData(width, height, data) {
             var originalBubbleRadius = d.radius;
 
 
+            // d3.select(bubbleToAnimateEl)
+            // .transition()
+            // .duration(300)
+            // .attr("r", function(d) {
+            //     return (originalBubbleRadius * .7);
+            // })
+            // .transition()
+            // .duration(1000)
+            // .ease("elastic")
+            // .attr("r", function(d){
+            //     return originalBubbleRadius;
+            // });
+
             d3.select(this)
                 .transition()
                 .duration(100)
@@ -173,8 +186,8 @@ export default function renderRankingData(width, height, data) {
                     return (originalBubbleRadius * .7);
                 })
                 .transition()
-                .duration(500)
-                .ease("bounce")
+                .duration(800)
+                .ease("elastic")
                 .attr("r", function(d) {
                     return originalBubbleRadius;
                 });
@@ -376,12 +389,12 @@ export default function renderRankingData(width, height, data) {
         
         d3.select(bubbleToAnimateEl)
             .transition()
-            .duration(300)
+            .duration(100)
             .attr("r", function(d) {
                 return (originalBubbleRadius * .7);
             })
             .transition()
-            .duration(1000)
+            .duration(800)
             .ease("elastic")
             .attr("r", function(d){
                 return originalBubbleRadius;
