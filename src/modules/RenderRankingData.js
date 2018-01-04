@@ -140,8 +140,9 @@ export default function renderRankingData(width, height, data) {
 
     // Define the div for the tooltip
     var clickToolTip = d3.select("body").append("div")	
-        .attr("class", "tooltip")				
-        .style("opacity", 0);
+        .attr("class", "tooltip add-border")				
+        .style("opacity", 0)
+        .style("transform", "scale(1, 0.5)");
 
     
 
@@ -159,32 +160,70 @@ export default function renderRankingData(width, height, data) {
         .attr("fill", function(d) { return colorScale(d.pomodoros) })
         .attr("stroke", "#3D4453")
         .attr("stroke-width", 3)
-        .on("mouseover", function(d) {
-            console.log("mousing over@");
-            clickToolTip.transition()
+        .on("click", function(d) {
+            console.log("mousing over  @");
+
+            var originalBubbleRadius = d.radius;
+
+
+            d3.select(this)
+                .transition()
+                .duration(100)
+                .attr("r", function(d) {
+                    return (originalBubbleRadius * .7);
+                })
+                .transition()
                 .duration(500)
-                .style("opacity", 1);
+                .ease("bounce")
+                .attr("r", function(d) {
+                    return originalBubbleRadius;
+                });
+
+            console.log(d);
+
+            var positionOffset;
+
+            if(d.x < width/2) {
+                console.log("clicked on left");
+                positionOffset = 0;
+            } else {
+                positionOffset = 150;
+                console.log("clicked on right");
+            }
+
+            var circleCenter = {
+                x: d.x,
+                y: d.y
+            };
+
+            console.log(circleCenter);
+
+            //position clickToolTip at center of circle
+            // clickToolTip
+            //     .style("top", 0);
+
+
+            clickToolTip
+                .transition()
+                .duration(1000)
+                .style("opacity", 1)
+                .style("transform", "scale(1,1)")
+                .style("top", circleCenter.x + 500);
+                // .style("top", "0px");
 
             clickToolTip.html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
                 .style("position", "absolute")
-                .style("left", (d3.touches.x) + "px")
-                .style("top", (d3.touches.y) + "px")
-                .call(function(selection) {
-                    var element = selection[0][0];
-
-                    console.log(element);
-                    console.log(d3.touches.x);
-                    console.log(element.getBoundingClientRect().left);
-                });
+                .style("left", (d3.event.pageX - positionOffset) + "px")
+                .style("top", (d3.event.pageY) + "px");
         })
-        .on('mousemove', function() {
-            // console.log(d3.event.pageX); // log the mouse x,y position
+        // .on('mousemove', function() {
+        //     // console.log(d3.event.pageX); // log the mouse x,y position
 
-            clickToolTip
-                .style("left", (d3.event.pageX - 100) + "px")
-                .style("top", (d3.event.pageY - 50) + "px")
-                .style("opacity", 1);
-        })
+        //     clickToolTip
+        //         // .style("left", (d3.event.pageX - 100) + "px")
+        //         // .style("top", (d3.event.pageY - 50) + "px")
+        //         .style("opacity", 1);
+        // })
         .on("mouseout", function(d) {
             // div.style("display", "none");
             clickToolTip.transition()
