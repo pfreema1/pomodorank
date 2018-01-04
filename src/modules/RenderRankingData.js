@@ -215,7 +215,7 @@ export default function renderRankingData(width, height, data) {
                 .style("position", "absolute")
                 .style("left", (d3.event.pageX - positionOffset) + "px")
                 .style("top", (d3.event.pageY) + "px");
-        })
+        });
         // .on('mousemove', function() {
         //     // console.log(d3.event.pageX); // log the mouse x,y position
 
@@ -224,13 +224,13 @@ export default function renderRankingData(width, height, data) {
         //         // .style("top", (d3.event.pageY - 50) + "px")
         //         .style("opacity", 1);
         // })
-        .on("mouseout", function(d) {
-            // div.style("display", "none");
-            clickToolTip.transition()
-                .duration(300)
-                .style("opacity", 0);
+        // .on("mouseout", function(d) {
+        //     // div.style("display", "none");
+        //     clickToolTip.transition()
+        //         .duration(300)
+        //         .style("opacity", 0);
 
-        });
+        // });
 
 
     //transition to make bubbles appear, ending with the 
