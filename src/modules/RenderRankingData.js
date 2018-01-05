@@ -21,7 +21,7 @@ export default function renderRankingData(width, height, data) {
 
 
     var widthToChargeScale = d3.scale.linear()
-        .domain([200, 900])
+        .domain([250, 900])
         .range([0, -800]);
 
     //create layout
@@ -70,15 +70,7 @@ export default function renderRankingData(width, height, data) {
         .style("transform", "scale(0,0)")
         .style("transform-origin", "top left");
 
-    
 
-    
-
-    //set radius scales' max: based on pomodoro amount
-    // var maxAmount = d3.max(nodes, function(d) {
-    //     // console.log(d.value);
-    //     return +d.value;
-    // });
 
     //find max pomodoro amount in data
     var maxAmount = data.children.reduce(function(prevVal, elem, index) {
@@ -140,8 +132,8 @@ export default function renderRankingData(width, height, data) {
 
     // Define the div for the tooltip
     var clickToolTip = d3.select("body").append("div")	
-        .attr("class", "tooltip add-border")				
-        .style("opacity", 0)
+        .attr("class", "tooltip click-tool-tip add-border")		
+        // .style("opacity", 0)
         .style("transform", "scale(1, 0.5)");
 
     
@@ -165,20 +157,7 @@ export default function renderRankingData(width, height, data) {
 
             var originalBubbleRadius = d.radius;
 
-
-            // d3.select(bubbleToAnimateEl)
-            // .transition()
-            // .duration(300)
-            // .attr("r", function(d) {
-            //     return (originalBubbleRadius * .7);
-            // })
-            // .transition()
-            // .duration(1000)
-            // .ease("elastic")
-            // .attr("r", function(d){
-            //     return originalBubbleRadius;
-            // });
-
+            //animate circle with radius change
             d3.select(this)
                 .transition()
                 .duration(100)
@@ -215,11 +194,13 @@ export default function renderRankingData(width, height, data) {
             // clickToolTip
             //     .style("top", 0);
 
-
+            //animate the clickToolTip
             clickToolTip
+                .classed("fade-out-click-tooltip", false)	
+                .classed("fade-in-click-tooltip", true)	    
                 .transition()
                 .duration(1000)
-                .style("opacity", 1)
+                // .style("opacity", 1)
                 .style("transform", "scale(1,1)")
                 .style("top", circleCenter.x + 500);
                 // .style("top", "0px");
@@ -227,7 +208,8 @@ export default function renderRankingData(width, height, data) {
             clickToolTip.html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
                 .style("position", "absolute")
                 .style("left", (d3.event.pageX - positionOffset) + "px")
-                .style("top", (d3.event.pageY) + "px");
+                .style("top", (d3.event.pageY) + "px")
+                .classed("fade-out-click-tooltip", true);
         });
         // .on('mousemove', function() {
         //     // console.log(d3.event.pageX); // log the mouse x,y position

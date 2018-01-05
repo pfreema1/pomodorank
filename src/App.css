@@ -522,23 +522,7 @@ code {
 }
 
 
-.tooltip {
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  position: absolute;
-  pointer-events: none;
-  text-align: center;
-  background-color: #EAEAEA;
-  border-radius: var(--borderRoundness);
-  padding: 20px;
-  white-space: nowrap;
-  color: var(--mainTextColor);
-}
 
-.tooltip div {
-  font-family: var(--primaryFont);
-  margin-top: 20px;
-  line-height: 25px;
-}
 
 .hover-tomato-icon {
   width: 15px;
@@ -623,6 +607,41 @@ svg#chart {
 .o-3 {
   color: #54A05C;
 }
+
+.fade-out-click-tooltip {
+  opacity: 0;
+}
+
+.click-tool-tip {
+  transition: transform opacity 1.0s ease-out;
+  opacity: 0;
+}
+
+.fade-in-click-tooltip {
+  opacity: 1;
+}
+
+
+.tooltip {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  position: absolute;
+  pointer-events: none;
+  text-align: center;
+  background-color: #EAEAEA;
+  border-radius: var(--borderRoundness);
+  padding: 20px;
+  white-space: nowrap;
+  color: var(--mainTextColor);
+}
+
+.tooltip div {
+  font-family: var(--primaryFont);
+  margin-top: 20px;
+  line-height: 25px;
+}
+
+
+
 
 
 /*
