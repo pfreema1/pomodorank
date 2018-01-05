@@ -608,18 +608,9 @@ svg#chart {
   color: #54A05C;
 }
 
-.fade-out-click-tooltip {
-  opacity: 0;
-}
 
-.click-tool-tip {
-  transition: transform opacity 1.0s ease-out;
-  opacity: 0;
-}
 
-.fade-in-click-tooltip {
-  opacity: 1;
-}
+
 
 
 .tooltip {
@@ -632,6 +623,8 @@ svg#chart {
   padding: 20px;
   white-space: nowrap;
   color: var(--mainTextColor);
+  opacity: 0;
+  transition: opacity 1.0s ease-in-out;
 }
 
 .tooltip div {
@@ -642,7 +635,24 @@ svg#chart {
 
 
 
+.fade-in-click-tooltip {
+  animation: click-tooltip-anim 3s ease-out;
+}
 
+@keyframes click-tooltip-anim {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  } 
+
+}
 
 /*
   for large screens:
