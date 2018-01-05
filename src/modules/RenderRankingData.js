@@ -22,7 +22,7 @@ export default function renderRankingData(width, height, data) {
 
     var widthToChargeScale = d3.scale.linear()
         .domain([250, 900])
-        .range([0, -800]);
+        .range([0, -200]);
 
     //create layout
     var force = d3.layout.force()
@@ -48,7 +48,7 @@ export default function renderRankingData(width, height, data) {
     //setup a scale for max radius:  880px wide canvas = 100 max radius
     var widthToRadiusScale = d3.scale.linear()
         .domain([0, 900])
-        .range([20, 100]);
+        .range([0, 100]);
 
     // console.log("widthToRadiusScale(500)" + widthToRadiusScale(100));
 
@@ -62,13 +62,23 @@ export default function renderRankingData(width, height, data) {
     var colorScale = d3.scale.category20c();
 
  
+    /*
+
+        // Define the div for the tooltip
+        var clickToolTip = d3.select("body").append("div")	
+        .attr("class", "tooltip add-border");	
+
+
+
+    */
+
 
     //set initial values for tooltips
     var scrollingToolTips = d3.select(".data-vis-wrapper").append("div")	
-        .attr("class", "tooltip")				
-        .style("opacity", 0)
-        .style("transform", "scale(0,0)")
-        .style("transform-origin", "top left");
+        .attr("class", "tooltip add-border");				
+        // .style("opacity", 0)
+        // .style("transform", "scale(0,0)")
+        // .style("transform-origin", "top left");
 
 
 
@@ -214,11 +224,7 @@ export default function renderRankingData(width, height, data) {
                 .html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
                 .style("position", "absolute")
                 .style("left", (d3.event.pageX - positionOffset) + "px")
-                .style("top", (d3.event.pageY) + "px");
-
-            //place clickToolTip at center of circle and move to the new top and left values
-            // clickToolTip.transition()
-            //     .attrTween("top", function() { return (d3.interpolate(circleCenter.y, d3.event.pageY) + "px"); });
+                .style("top", (d3.event.pageY - 150) + "px");
 
         });
         // .on('mousemove', function() {
@@ -350,21 +356,78 @@ export default function renderRankingData(width, height, data) {
         }
 
 
+        /*
+
+                //animate the clickToolTip
+            clickToolTip
+                .call( () => {
+                    
+                    var element = clickToolTip[0][0];
+
+                    element.classList.remove("fade-in-click-tooltip");
+                    // magic here!  this triggers a reflow (reflow = rerender of all or 
+                    // part of page)
+                    void element.offsetWidth;
+
+                    element.classList.add("fade-in-click-tooltip");
+                    
+                });	
+               
+
+            clickToolTip
+                .html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
+                .style("position", "absolute")
+                .style("left", (d3.event.pageX - positionOffset) + "px")
+                .style("top", (d3.event.pageY) + "px");
+
+
+
+        */
+
+
+        /*
+        *       calculate offset
+        */
+
+        function calculateOffset(viewPortWidth, elementWidth, elementPos) {
+            if(viewPortWidth < (elementPos + elementWidth)) {
+                
+                //case:  element is overflowing so lets offset
+                return -100;
+            } else {
+                
+                return 0;
+            }
+        }
+
+        var toolTipOffset = 0;
+        
+
+        scrollingToolTips.call( () => {
+            scrollingToolTips[0][0].classList.remove("fade-in-click-tooltip");
+            //reflow magic
+            void scrollingToolTips[0][0].offsetWidth;
+
+            scrollingToolTips[0][0].classList.add("fade-in-click-tooltip");
+        });
+
         //scroll through users
         scrollingToolTips
             .html(funnyFacesArray[randomNode.characterNum] + "<br/><div>" + randomNode.username + "<br/>" + randomNode.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
             .style("position", "absolute")
-            .style("left", (randomNode.x) + "px")
-            .style("top", (randomNode.y) + "px")
-            .transition()
-                .duration(500)
-                .style("transform", "scale(1,1)")
-                .style("opacity", 1)
-            .transition()
-                .duration(4000)
-                .style("opacity", 0);
+            .call(function() {
+                
+                toolTipOffset = calculateOffset(document.documentElement.clientWidth, scrollingToolTips[0][0].offsetWidth, randomNode.x);
+                
+            })
+            .style("left", (randomNode.x + toolTipOffset) + "px")
+            .style("top", (randomNode.y - 150) + "px");
 
 
+
+        
+
+        
 
 
         //

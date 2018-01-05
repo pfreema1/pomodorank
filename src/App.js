@@ -24,9 +24,6 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-
-    console.log(funnyFacesArray.length);
-
     this.state = {
       settingsCogClicked: false,
       userSettings: {
