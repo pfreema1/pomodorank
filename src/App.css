@@ -641,10 +641,16 @@ svg#chart {
 
 @keyframes click-tooltip-anim {
   0% {
-    opacity: 1;
+    opacity: 0;
+    transform: scale(1, 0.2);
   }
 
-  50% {
+  10% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+
+  30% {
     opacity: 1;
   }
 

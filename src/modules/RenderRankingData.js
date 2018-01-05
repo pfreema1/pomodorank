@@ -196,33 +196,30 @@ export default function renderRankingData(width, height, data) {
 
             //animate the clickToolTip
             clickToolTip
-                // .classed("fade-in-click-tooltip", false)
-                // .classed("fade-in-click-tooltip", true)
                 .call( () => {
-                    // setTimeout(() => {
-                    //     this.classed("fade-in-click-tooltip", false);
-                    // }, 3000)
-                    console.log(clickToolTip);
-                    // clickToolTip[0][0].classList.remove("fade-in-click-tooltip");
-                    clickToolTip[0][0].classList.remove("fade-in-click-tooltip");
+                    
+                    var element = clickToolTip[0][0];
 
-                    setTimeout( () => {
-                        clickToolTip[0][0].classList.add("fade-in-click-tooltip");
-                    }, 0);
+                    element.classList.remove("fade-in-click-tooltip");
+                    // magic here!  this triggers a reflow (reflow = rerender of all or 
+                    // part of page)
+                    void element.offsetWidth;
+
+                    element.classList.add("fade-in-click-tooltip");
                     
                 });	
-                // .classed("fade-in-click-tooltip", true);	    
-                // .transition()
-                // .duration(1000)
-                // .style("opacity", 1)
-                // .style("transform", "scale(1,1)")
-                // .style("top", circleCenter.x + 500);
-                // .style("top", "0px");
+               
 
-            clickToolTip.html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
+            clickToolTip
+                .html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
                 .style("position", "absolute")
                 .style("left", (d3.event.pageX - positionOffset) + "px")
                 .style("top", (d3.event.pageY) + "px");
+
+            //place clickToolTip at center of circle and move to the new top and left values
+            // clickToolTip.transition()
+            //     .attrTween("top", function() { return (d3.interpolate(circleCenter.y, d3.event.pageY) + "px"); });
+
         });
         // .on('mousemove', function() {
         //     // console.log(d3.event.pageX); // log the mouse x,y position
@@ -340,10 +337,6 @@ export default function renderRankingData(width, height, data) {
         // var tooltipCoords = 0;
         // console.log(nodes);
         var randomNode = nodes[randomNum];
-
-
-
-        
 
         //offset left by the percentage the container takes up 
         //30% off of the left
