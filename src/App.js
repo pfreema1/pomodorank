@@ -58,10 +58,10 @@ class App extends Component {
     //update userSettings
     let allCookies = document.cookie;
 
-    // document.cookie = "meow=mix";
+    // console.log(typeof allCookies);
   
-    if(allCookies === "") {
-      console.log("no cookie found - running get request for user id");
+    if(!allCookies.includes("userId")) {
+      // console.log("no cookie found - running get request for user id");
       //make get request to api to get id
       fetch('https://serene-escarpment-46084.herokuapp.com/randomId', {
         method: 'get',

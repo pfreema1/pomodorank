@@ -17,5 +17,6 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "https://vast-sands-57734.herokuapp.com/cool"
+  "proxy": "https://vast-sands-57734.herokuapp.com/cool",
+  "homepage": "http://paulfreeman.design/pomodorank"
 }

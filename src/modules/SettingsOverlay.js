@@ -20,7 +20,7 @@ class SettingsOverlay extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log("nextProps.settingsCogClicked:  " + nextProps.settingsCogClicked);
+        // console.log("nextProps.settingsCogClicked:  " + nextProps.settingsCogClicked);
         if(nextProps.settingsCogClicked) {
             // show overlay!
             this.setState({
