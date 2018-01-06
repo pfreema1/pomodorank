@@ -81,6 +81,14 @@ div {
   -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
+html {
+// -ms-touch-action: manipulation;
+// touch-action: manipulation;
+}
+
+
+
+
 body{
   background-color: RGBA(98, 170, 191, 1.00);
   font-family: var(--primaryFont);
@@ -302,7 +310,8 @@ body{
 }
 
 .header-logo {
-  width: 100%;
+  // width: 100%;
+  float: left;
   height: 100%;
   // background-color: blue;
   display: inline-block;
@@ -321,6 +330,8 @@ body{
                 -6px 6px 0px var(--logoShadowColor);
   color: var(--logoColor);
   letter-spacing: var(--logoLetterSpacing);
+
+  margin-left: 20px;
 }
 
 .settings-button-container {
@@ -660,17 +671,42 @@ svg#chart {
 
 }
 
+.fade-out-hover-tooltip {
+  animation: hover-tooltip-anim 3s ease-out;
+}
+
+@keyframes hover-tooltip-anim {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+
+
+
 /*
-  for large screens:
-    .main-container {
+  for larger screens
+    
+*/
+@media (min-width: 1023px) {
+
+.main-container {
       display: flex;
     }
 
     .time-display-wrapper {
-      width: 30%;
+      // width: 30%;
     }
 
     .rankings-container {
       width: 70%;
     }
-*/
+
+
+}
+
+

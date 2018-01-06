@@ -143,12 +143,12 @@ export default function renderRankingData(width, height, data) {
     // Define the div for the tooltip
     var clickToolTip = d3.select("body").append("div")	
         .attr("class", "tooltip add-border");		
-        // .style("opacity", 0)
-        // .style("transform", "scale(1, 0.5)");
-
-    
 
 
+    var hoverToolTip = d3.select("body").append("div")
+        .attr("class", "tooltip add-border");
+
+    // var lastMouseOverEvent = 0;
 
     //create new circle elements each with class `bubble`.
     //there will be on circle.bubble for each object in the nodes array
@@ -162,8 +162,9 @@ export default function renderRankingData(width, height, data) {
         .attr("fill", function(d) { return colorScale(d.pomodoros) })
         .attr("stroke", "#3D4453")
         .attr("stroke-width", 3)
-        .on("click", function(d) {
-            
+        .on("touchstart", function(d) {
+            // console.log("CLICK EVENT FIRING");
+            // d3.event.preventDefault();
 
             var originalBubbleRadius = d.radius;
 
@@ -198,11 +199,7 @@ export default function renderRankingData(width, height, data) {
                 y: d.y
             };
 
-            // console.log(circleCenter);
 
-            //position clickToolTip at center of circle
-            // clickToolTip
-            //     .style("top", 0);
 
             //animate the clickToolTip
             clickToolTip
@@ -220,28 +217,95 @@ export default function renderRankingData(width, height, data) {
                 });	
                
 
+            //cross browser issues with getting touch position
+            //need to check if d3.event.pageX is actually returning a value
+            //if not, we need to look at another way to get touch position
+            var touchEventPos = {x: 0, y: 0};
+
+            if(!d3.event.pageX) {
+                touchEventPos.x = d3.event.targetTouches[0].pageX;
+                touchEventPos.y = d3.event.targetTouches[0].pageY;
+
+            } else {
+                touchEventPos.x = d3.event.pageX;
+                touchEventPos.y = d3.event.pageY;
+            }
+
+            // console.log(touchEventPos);
+
             clickToolTip
                 .html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
                 .style("position", "absolute")
-                .style("left", (d3.event.pageX - positionOffset) + "px")
+                .style("left", (touchEventPos.x - positionOffset) + "px")
+                .style("top", (touchEventPos.y - 150) + "px");
+
+        })
+        .on("mouseover", function(d) {
+            
+
+
+            //only run if on larger screens (see explanation in .on click section)
+            if(document.documentElement.clientWidth > 1023) {
+                //animate bubble
+                var originalBubbleRadius = d.radius;
+                
+                //check to make sure we are only animating IF the bubble is the original radius
+                //otherwise it will trigger the animation over and over due to resizing while hovering
+                if(d3.select(this).attr("r") == originalBubbleRadius) {
+                    //animate circle with radius change
+                    d3.select(this)
+                    .transition()
+                    .duration(100)
+                    .attr("r", function(d) {
+                        return (originalBubbleRadius * .7);
+                    })
+                    .transition()
+                    .duration(800)
+                    .ease("elastic")
+                    .attr("r", function(d) {
+                        return originalBubbleRadius;
+                    });
+                }
+                
+            }
+        })
+        .on("mousemove", function(d) {
+            //only run if on larger screens (see explanation in .on click section)
+            if(document.documentElement.clientWidth > 1023) {
+
+                // hoverToolTip.classed("")
+
+
+                hoverToolTip
+                .html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
+                .style("position", "absolute")
+                .style("opacity", 1)
+                .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY - 150) + "px");
+            }
+        })
+        .on("mouseout", function(d) {
+            //only run if on larger screens (see explanation in .on click section)
+            if(document.documentElement.clientWidth > 1023) {
 
+                /*
+                    element.classList.remove("fade-in-click-tooltip");
+                    // magic here!  this triggers a reflow (reflow = rerender of all or 
+                    // part of page)
+                    void element.offsetWidth;
+
+                    element.classList.add("fade-in-click-tooltip");
+                */
+
+                // var element = hoverToolTip[0][0];
+                // element.classList.remove("fade-out-hover-tooltip");
+                // void element.offsetWidth;   //trigger reflow
+                // element.classList.add("fade-out-hover-tooltip");
+          
+                hoverToolTip.style("opacity", 0);
+            }
         });
-        // .on('mousemove', function() {
-        //     // console.log(d3.event.pageX); // log the mouse x,y position
-
-        //     clickToolTip
-        //         // .style("left", (d3.event.pageX - 100) + "px")
-        //         // .style("top", (d3.event.pageY - 50) + "px")
-        //         .style("opacity", 1);
-        // })
-        // .on("mouseout", function(d) {
-        //     // div.style("display", "none");
-        //     clickToolTip.transition()
-        //         .duration(300)
-        //         .style("opacity", 0);
-
-        // });
+        
 
 
     //transition to make bubbles appear, ending with the 
@@ -254,6 +318,7 @@ export default function renderRankingData(width, height, data) {
 
     //set initial layout to single group
     groupBubbles();
+
 
 
 
@@ -455,7 +520,7 @@ export default function renderRankingData(width, height, data) {
         
             
 
-    }, 5000, 15);
+    }, 5000, 8);
 
     
 

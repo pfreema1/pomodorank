@@ -65,8 +65,9 @@ class RankingsDataVis extends Component {
             
             //check if width is less than 1200 px, if so, make sure
             //width is 100% of width
-            if(document.documentElement.clientWidth < 1200) {
+            if(document.documentElement.clientWidth < 1023) {
                 width = document.documentElement.clientWidth;
+                height = document.documentElement.clientHeight * .7;
             } 
             
             renderRankingData(width, height, data);
