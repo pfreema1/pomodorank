@@ -43,13 +43,12 @@ class RankingsDataVis extends Component {
     }
 
     componentDidMount() {
-        // console.log("component mounted");
 
-        var data;
+        let data;
 
         //make fetch request for data
         //setup fetch options
-        var fetchOptions = {
+        let fetchOptions = {
             method: "get",
             mode: "cors"
         };  

@@ -261,8 +261,7 @@ class TimeDisplay extends Component {
 
   handlePomodoroComplete() {
 
-    // console.log(this.props.userSettings);
-    var payload = {
+    let payload = {
       username: this.props.userSettings.username,
       userId: this.props.userSettings.userId,
       characterNum: this.props.userSettings.characterNum

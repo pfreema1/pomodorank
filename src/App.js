@@ -55,7 +55,7 @@ class App extends Component {
     
     //check if cookie with userid alread exists, if not make one, if so,
     //update userSettings
-    var allCookies = document.cookie;
+    let allCookies = document.cookie;
 
     // document.cookie = "meow=mix";
   
@@ -149,10 +149,10 @@ class App extends Component {
   }
 
   createCookie(name,value,days) {
-    var expires = "";
+    let expires = "";
 
     if (days) {
-      var date = new Date();
+      let date = new Date();
       date.setTime(date.getTime()+(days*24*60*60*1000));
       expires = "; expires=" + date.toGMTString();
     }
@@ -163,10 +163,10 @@ class App extends Component {
   }
 
   readCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-      var c = ca[i];
+    let nameEQ = name + "=";
+    let ca = document.cookie.split(';');
+    for(let i=0;i < ca.length;i++) {
+      let c = ca[i];
       while (c.charAt(0) === ' ') c = c.substring(1,c.length);
       if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length,c.length);
     }
@@ -258,7 +258,7 @@ class App extends Component {
       //update the document (entry) in db
       //items to send: userId, username, characterNum
 
-      var payload = {
+      let payload = {
         userId: this.state.userSettings.userId,
         username: this.state.userSettings.username,
         characterNum: this.state.userSettings.characterNum
