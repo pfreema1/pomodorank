@@ -20,6 +20,7 @@ class SettingsOverlay extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log("nextProps.settingsCogClicked:  " + nextProps.settingsCogClicked);
         if(nextProps.settingsCogClicked) {
             // show overlay!
             this.setState({
@@ -35,6 +36,9 @@ class SettingsOverlay extends Component {
         });
 
         setTimeout(this.resetIconAnim, 500);
+
+        //let parent know
+        this.props.handleSettingsCloseButtonClick();
     }
 
     resetIconAnim() {

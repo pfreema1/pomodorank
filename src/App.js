@@ -49,6 +49,7 @@ class App extends Component {
     this.firstClickHandler = this.firstClickHandler.bind(this);
     this.updateCookie = this.updateCookie.bind(this);
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
+    this.handleSettingsCloseButtonClick = this.handleSettingsCloseButtonClick.bind(this);
   }
 
   componentDidMount() {
@@ -195,10 +196,14 @@ class App extends Component {
 
   handleSettingsButtonClick() {
 
-    
-
     this.setState({
       settingsCogClicked: true
+    });
+  }
+
+  handleSettingsCloseButtonClick() {
+    this.setState({
+      settingsCogClicked: false
     });
   }
 
@@ -235,13 +240,6 @@ class App extends Component {
 
   }
 
-
-  // //reset state of flash notice
-  // resetFlashState() {
-  //   this.setState({
-  //     flashNotice: false
-  //   });
-  // }
 
   handleUsernameChange(newName, charNum) {
 
@@ -307,6 +305,7 @@ class App extends Component {
             userSettings={this.state.userSettings} 
             handleUsernameChange={this.handleUsernameChange} 
             flashNotice={this.state.flashNotice}
+            handleSettingsCloseButtonClick={this.handleSettingsCloseButtonClick}
           />
           <HeaderSection 
             handleSettingsButtonClick={this.handleSettingsButtonClick}
