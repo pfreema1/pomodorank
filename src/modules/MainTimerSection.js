@@ -105,7 +105,7 @@ class TimeDisplay extends Component {
     super(props);
 
     this.state = {
-      seconds: props.timerMode - (props.timerMode - 2),  // props.timerMode * 60,
+      seconds: props.timerMode * 60,
       formattedTimeString: null,
       fadeGlow: false,
       timeRanOut: true

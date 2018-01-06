@@ -311,7 +311,7 @@ body{
 
 .header-logo {
   // width: 100%;
-  float: left;
+  // float: left;
   height: 100%;
   // background-color: blue;
   display: inline-block;
@@ -332,6 +332,7 @@ body{
   letter-spacing: var(--logoLetterSpacing);
 
   margin-left: 20px;
+  margin-top: 10px;
 }
 
 .settings-button-container {
@@ -350,14 +351,16 @@ body{
   position: absolute;
   top: 0;
 
-  left: -100vw;
+  // left: -100vw;
+  transform: translateX(-100vw);
   z-index: 900;
   display: flex;
   flex-direction: column;
 }
 
 .slide-settings-in {
-  left: 0;
+  // left: 0;
+  transform: translateX(0vw);
 }
 
 .icon-cancel {

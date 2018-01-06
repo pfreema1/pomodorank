@@ -1,8 +1,6 @@
 import * as d3 from 'd3';
-/* funny text faces */
 import funnyFacesArray from '../modules/FunnyFacesArray';
 import tomatoIcon from '../images/tomatoIcon.png';
-import { select } from 'd3';
 
 
 export default function renderRankingData(width, height, data) {
@@ -10,7 +8,7 @@ export default function renderRankingData(width, height, data) {
    
     
     //create canvas
-    var canvas = d3
+    const canvas = d3
         .select(".data-vis-wrapper")
         .append("svg")
         .attr("id", "chart")
@@ -19,13 +17,13 @@ export default function renderRankingData(width, height, data) {
         .append("g")
         .attr("transform", "translate(0, 0)");
 
-
-    var widthToChargeScale = d3.scale.linear()
+    //scale: canvas width to amount of "charge" 
+    const widthToChargeScale = d3.scale.linear()
         .domain([250, 900])
-        .range([0, -200]);
+        .range([0, -700]);
 
     //create layout
-    var force = d3.layout.force()
+    const force = d3.layout.force()
         .size([width, height - 60])
         // .charge(charge)
         .gravity(-0.01)
@@ -37,53 +35,39 @@ export default function renderRankingData(width, height, data) {
     
     // Locations to move bubbles towards, depending
     // on which view mode is selected.
-    var center = { x: width / 2, y: height / 2 };
-
-    // console.log(center);
+    const center = { x: width / 2, y: height / 2 };
 
     // Used when setting up force and
     // moving around nodes
-    var damper = 0.102;
+    const damper = 0.102;
 
     //setup a scale for max radius:  880px wide canvas = 100 max radius
-    var widthToRadiusScale = d3.scale.linear()
+    const widthToRadiusScale = d3.scale.linear()
         .domain([0, 900])
         .range([0, 100]);
 
     // console.log("widthToRadiusScale(500)" + widthToRadiusScale(100));
 
     //controls max size of circles
-    var radiusOfHighestRank = widthToRadiusScale(width);
+    const radiusOfHighestRank = widthToRadiusScale(width);
 
     // These will be set in create_nodes and create_vis
-    var bubbles = null;
-    var nodes = [];
+    let bubbles = null;
+    let nodes = [];
 
-    var colorScale = d3.scale.category20c();
+    const colorScale = d3.scale.category20c();
 
  
-    /*
-
-        // Define the div for the tooltip
-        var clickToolTip = d3.select("body").append("div")	
-        .attr("class", "tooltip add-border");	
-
-
-
-    */
-
 
     //set initial values for tooltips
-    var scrollingToolTips = d3.select(".data-vis-wrapper").append("div")	
+    const scrollingToolTips = d3.select(".data-vis-wrapper").append("div")	
         .attr("class", "tooltip add-border");				
-        // .style("opacity", 0)
-        // .style("transform", "scale(0,0)")
-        // .style("transform-origin", "top left");
+
 
 
 
     //find max pomodoro amount in data
-    var maxAmount = data.children.reduce(function(prevVal, elem, index) {
+    const maxAmount = data.children.reduce(function(prevVal, elem, index) {
         if(elem.pomodoros > prevVal) {
             return elem.pomodoros;
         } else {
@@ -92,8 +76,8 @@ export default function renderRankingData(width, height, data) {
     }, 0);
     
     
-
-    var radiusScale = d3.scale.pow()
+    
+    const radiusScale = d3.scale.pow()
         .exponent(0.5)
         .domain([0, maxAmount])
         .range([0, radiusOfHighestRank]);
@@ -102,11 +86,11 @@ export default function renderRankingData(width, height, data) {
 
 
     /*
-    *   create nodes with data
+    *   function to create nodes with data
     */
     function createNodes(data) {
         
-        var myNodes = data.map(function(d) {
+        let myNodes = data.map(function(d) {
             
             return {
                 username: d.username,
@@ -141,14 +125,13 @@ export default function renderRankingData(width, height, data) {
         .data(nodes);
 
     // Define the div for the tooltip
-    var clickToolTip = d3.select("body").append("div")	
+    const clickToolTip = d3.select("body").append("div")	
         .attr("class", "tooltip add-border");		
 
 
-    var hoverToolTip = d3.select("body").append("div")
+    const hoverToolTip = d3.select("body").append("div")
         .attr("class", "tooltip add-border");
 
-    // var lastMouseOverEvent = 0;
 
     //create new circle elements each with class `bubble`.
     //there will be on circle.bubble for each object in the nodes array
@@ -162,146 +145,12 @@ export default function renderRankingData(width, height, data) {
         .attr("fill", function(d) { return colorScale(d.pomodoros) })
         .attr("stroke", "#3D4453")
         .attr("stroke-width", 3)
-        .on("touchstart", function(d) {
-            // console.log("CLICK EVENT FIRING");
-            // d3.event.preventDefault();
-
-            var originalBubbleRadius = d.radius;
-
-            //animate circle with radius change
-            d3.select(this)
-                .transition()
-                .duration(100)
-                .attr("r", function(d) {
-                    return (originalBubbleRadius * .7);
-                })
-                .transition()
-                .duration(800)
-                .ease("elastic")
-                .attr("r", function(d) {
-                    return originalBubbleRadius;
-                });
-
-            // console.log(d);
-
-            var positionOffset;
-
-            if(d.x < width/2) {
-                // console.log("clicked on left");
-                positionOffset = 0;
-            } else {
-                positionOffset = 180;
-                // console.log("clicked on right");
-            }
-
-            var circleCenter = {
-                x: d.x,
-                y: d.y
-            };
-
-
-
-            //animate the clickToolTip
-            clickToolTip
-                .call( () => {
-                    
-                    var element = clickToolTip[0][0];
-
-                    element.classList.remove("fade-in-click-tooltip");
-                    // magic here!  this triggers a reflow (reflow = rerender of all or 
-                    // part of page)
-                    void element.offsetWidth;
-
-                    element.classList.add("fade-in-click-tooltip");
-                    
-                });	
-               
-
-            //cross browser issues with getting touch position
-            //need to check if d3.event.pageX is actually returning a value
-            //if not, we need to look at another way to get touch position
-            var touchEventPos = {x: 0, y: 0};
-
-            if(!d3.event.pageX) {
-                touchEventPos.x = d3.event.targetTouches[0].pageX;
-                touchEventPos.y = d3.event.targetTouches[0].pageY;
-
-            } else {
-                touchEventPos.x = d3.event.pageX;
-                touchEventPos.y = d3.event.pageY;
-            }
-
-            // console.log(touchEventPos);
-
-            clickToolTip
-                .html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
-                .style("position", "absolute")
-                .style("left", (touchEventPos.x - positionOffset) + "px")
-                .style("top", (touchEventPos.y - 150) + "px");
-
-        })
-        .on("mouseover", function(d) {
-            
-
-
-            //only run if on larger screens (see explanation in .on click section)
-            if(document.documentElement.clientWidth > 1023) {
-                //animate bubble
-                var originalBubbleRadius = d.radius;
-                
-                //check to make sure we are only animating IF the bubble is the original radius
-                //otherwise it will trigger the animation over and over due to resizing while hovering
-                if(d3.select(this).attr("r") == originalBubbleRadius) {
-                    //animate circle with radius change
-                    d3.select(this)
-                    .transition()
-                    .duration(100)
-                    .attr("r", function(d) {
-                        return (originalBubbleRadius * .7);
-                    })
-                    .transition()
-                    .duration(800)
-                    .ease("elastic")
-                    .attr("r", function(d) {
-                        return originalBubbleRadius;
-                    });
-                }
-                
-            }
-        })
-        .on("mousemove", function(d) {
-            //only run if on larger screens (see explanation in .on click section)
-            if(document.documentElement.clientWidth > 1023) {
-
-                // hoverToolTip.classed("")
-
-
-                hoverToolTip
-                .html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
-                .style("position", "absolute")
-                .style("opacity", 1)
-                .style("left", (d3.event.pageX) + "px")
-                .style("top", (d3.event.pageY - 150) + "px");
-            }
-        })
+        .on("touchstart", handleTouchStart)
+        .on("mouseover", handleMouseOver)
+        .on("mousemove", handleMouseMove)
         .on("mouseout", function(d) {
             //only run if on larger screens (see explanation in .on click section)
-            if(document.documentElement.clientWidth > 1023) {
-
-                /*
-                    element.classList.remove("fade-in-click-tooltip");
-                    // magic here!  this triggers a reflow (reflow = rerender of all or 
-                    // part of page)
-                    void element.offsetWidth;
-
-                    element.classList.add("fade-in-click-tooltip");
-                */
-
-                // var element = hoverToolTip[0][0];
-                // element.classList.remove("fade-out-hover-tooltip");
-                // void element.offsetWidth;   //trigger reflow
-                // element.classList.add("fade-out-hover-tooltip");
-          
+            if(document.documentElement.clientWidth > 1023) {     
                 hoverToolTip.style("opacity", 0);
             }
         });
@@ -321,11 +170,135 @@ export default function renderRankingData(width, height, data) {
 
 
 
+    
+
+
+    /*
+    *   handler for touchstart event
+    *
+    */
+    function handleTouchStart(d) {
+
+        let originalBubbleRadius = d.radius;
+
+        //animate circle with radius change
+        d3.select(this)
+            .transition()
+            .duration(100)
+            .attr("r", function(d) {
+                return (originalBubbleRadius * .7);
+            })
+            .transition()
+            .duration(800)
+            .ease("elastic")
+            .attr("r", function(d) {
+                return originalBubbleRadius;
+            });
+
+
+        let positionOffset;
+
+        if(d.x < width/2) {
+            positionOffset = 0;
+        } else {
+            positionOffset = 180;
+        }
 
 
 
 
 
+        //animate the clickToolTip
+        clickToolTip
+            .call( () => {
+                
+                let element = clickToolTip[0][0];
+
+                element.classList.remove("fade-in-click-tooltip");
+                // magic here!  this triggers a reflow (reflow = rerender of all or 
+                // part of page)
+                void element.offsetWidth;
+
+                element.classList.add("fade-in-click-tooltip");
+                
+            });	
+            
+
+        //cross browser issues with getting touch position
+        //need to check if d3.event.pageX is actually returning a value
+        //if not, we need to look at another way to get touch position
+        let touchEventPos = {x: 0, y: 0};
+
+        if(!d3.event.pageX) {
+            touchEventPos.x = d3.event.targetTouches[0].pageX;
+            touchEventPos.y = d3.event.targetTouches[0].pageY;
+
+        } else {
+            touchEventPos.x = d3.event.pageX;
+            touchEventPos.y = d3.event.pageY;
+        }
+
+        // console.log(touchEventPos);
+
+        clickToolTip
+            .html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
+            .style("position", "absolute")
+            .style("left", (touchEventPos.x - positionOffset) + "px")
+            .style("top", (touchEventPos.y - 150) + "px");
+
+    
+    }
+
+
+    /*
+    *   handler for mouseover event
+    *
+    */
+    function handleMouseOver(d) {
+        
+        //only run if on larger screens (see explanation in .on click section)
+        if(document.documentElement.clientWidth > 1023) {
+            //animate bubble
+            let originalBubbleRadius = d.radius;
+
+            //check to make sure we are only animating IF the bubble is the original radius
+            //otherwise it will trigger the animation over and over due to resizing while hovering
+            if(parseFloat(d3.select(this).attr("r")) === originalBubbleRadius) {
+                //animate circle with radius change
+                d3.select(this)
+                .transition()
+                .duration(100)
+                .attr("r", function(d) {
+                    return (originalBubbleRadius * .7);
+                })
+                .transition()
+                .duration(800)
+                .ease("elastic")
+                .attr("r", function(d) {
+                    return originalBubbleRadius;
+                });
+            } 
+            
+        }
+        
+    }
+
+    /*
+    *   handler for mousemove event
+    *
+    */
+    function handleMouseMove(d) {
+        //only run if on larger screens (see explanation in .on click section)
+        if(document.documentElement.clientWidth > 1023) {
+
+            hoverToolTip
+                .html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
+                .style("position", "absolute")
+                .style("opacity", 1)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 150) + "px");
+        }
+    }
 
 
     /*
@@ -376,19 +349,14 @@ export default function renderRankingData(width, height, data) {
         return randomNum;
     }
 
-    /*
-    *   charge function
-    */
-    // function charge(d) {
-    //     return -Math.pow(d.r, 2.0) / 8;
-    // }
+
 
     /*
     *   helper function to run the cycle through users, but end after "repetitions"
     */
     function setIntervalX(callback, delay, repetitions) {
-        var x = 0;
-        var intervalID = window.setInterval(function () {
+        let x = 0;
+        let intervalID = window.setInterval(function () {
     
            callback();
     
@@ -404,50 +372,8 @@ export default function renderRankingData(width, height, data) {
     setIntervalX(function() {
         // console.log(d3.max(nodes));
         
-        var randomNum = getRandomInt(0, nodes.length - 1);
-        // var tooltipCoords = 0;
-        // console.log(nodes);
-        var randomNode = nodes[randomNum];
-
-        //offset left by the percentage the container takes up 
-        //30% off of the left
-        //
-        var leftOffset = document.documentElement.clientWidth * .3;
-        var topOffset = 0;
-
-        if(document.documentElement.clientWidth < 1200) {
-            leftOffset = 0;
-
-        }
-
-
-        /*
-
-                //animate the clickToolTip
-            clickToolTip
-                .call( () => {
-                    
-                    var element = clickToolTip[0][0];
-
-                    element.classList.remove("fade-in-click-tooltip");
-                    // magic here!  this triggers a reflow (reflow = rerender of all or 
-                    // part of page)
-                    void element.offsetWidth;
-
-                    element.classList.add("fade-in-click-tooltip");
-                    
-                });	
-               
-
-            clickToolTip
-                .html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
-                .style("position", "absolute")
-                .style("left", (d3.event.pageX - positionOffset) + "px")
-                .style("top", (d3.event.pageY) + "px");
-
-
-
-        */
+        let randomNum = getRandomInt(0, nodes.length - 1);
+        let randomNode = nodes[randomNum];
 
 
         /*
@@ -465,19 +391,16 @@ export default function renderRankingData(width, height, data) {
             }
         }
 
-        var toolTipOffset = 0;
+        let toolTipOffset = 0;
         
 
         scrollingToolTips.call( () => {
             scrollingToolTips[0][0].classList.remove("fade-in-click-tooltip");
-            //reflow magic
-            void scrollingToolTips[0][0].offsetWidth;
+            
+            void scrollingToolTips[0][0].offsetWidth;  //causes reflow
 
             scrollingToolTips[0][0].classList.add("fade-in-click-tooltip");
-        });
-
-        //scroll through users
-        scrollingToolTips
+            })
             .html(funnyFacesArray[randomNode.characterNum] + "<br/><div>" + randomNode.username + "<br/>" + randomNode.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
             .style("position", "absolute")
             .call(function() {
@@ -489,18 +412,12 @@ export default function renderRankingData(width, height, data) {
             .style("top", (randomNode.y - 150) + "px");
 
 
-
-        
-
-        
-
-
         //
         //animate bubble
         //
-        var bubbleToAnimateEl = document.getElementById(nodes[randomNum].userId);
+        let bubbleToAnimateEl = document.getElementById(nodes[randomNum].userId);
 
-        var originalBubbleRadius = nodes[randomNum].radius;
+        let originalBubbleRadius = nodes[randomNum].radius;
       
         
         d3.select(bubbleToAnimateEl)
