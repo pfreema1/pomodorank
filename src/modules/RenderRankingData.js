@@ -46,8 +46,6 @@ export default function renderRankingData(width, height, data) {
         .domain([0, 900])
         .range([0, 100]);
 
-    // console.log("widthToRadiusScale(500)" + widthToRadiusScale(100));
-
     //controls max size of circles
     const radiusOfHighestRank = widthToRadiusScale(width);
 
@@ -153,7 +151,6 @@ export default function renderRankingData(width, height, data) {
             //only run if on larger screens (see explanation in .on click section)
             // if(document.documentElement.clientWidth > 1023) {    
             if(!touchBool) {    
-                console.log("mouseout"); 
                 hoverToolTip.style("opacity", 0);
             }
         })
@@ -247,7 +244,6 @@ export default function renderRankingData(width, height, data) {
             touchEventPos.y = d3.event.pageY;
         }
 
-        // console.log(touchEventPos);
 
         clickToolTip
             .html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
@@ -265,7 +261,6 @@ export default function renderRankingData(width, height, data) {
     */
     function handleMouseOver(d) {
         
-        console.log("mouseover");
         //only run if on larger screens (see explanation in .on click section)
         // if(document.documentElement.clientWidth > 1023) {
         if(!touchBool) {  
@@ -299,7 +294,6 @@ export default function renderRankingData(width, height, data) {
     *
     */
     function handleMouseMove(d) {
-        console.log("mousemove");
         //only run if on larger screens (see explanation in .on click section)
         // if(document.documentElement.clientWidth > 1023) {
         if(!touchBool) {  
@@ -320,7 +314,6 @@ export default function renderRankingData(width, height, data) {
     */
     function groupBubbles() {
         force.on("tick", function(e) {
-            // console.log(e);
             bubbles.each(moveToCenter(e.alpha))
                 .attr("cx", function(d) { return d.x; })
                 .attr("cy", function(d) { return d.y; });
@@ -382,7 +375,6 @@ export default function renderRankingData(width, height, data) {
     *   interval function to randomly show user profiles for X amount of times
     */
     setIntervalX(function() {
-        // console.log(d3.max(nodes));
         
         let randomNum = getRandomInt(0, nodes.length - 1);
         let randomNode = nodes[randomNum];
