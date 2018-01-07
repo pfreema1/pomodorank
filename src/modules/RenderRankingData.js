@@ -35,7 +35,7 @@ export default function renderRankingData(width, height, data) {
     
     // Locations to move bubbles towards, depending
     // on which view mode is selected.
-    const center = { x: width / 2, y: height / 2 };
+    let center = { x: width / 2, y: height / 2 };
 
     // Used when setting up force and
     // moving around nodes
@@ -47,7 +47,7 @@ export default function renderRankingData(width, height, data) {
         .range([0, 100]);
 
     //controls max size of circles
-    const radiusOfHighestRank = widthToRadiusScale(width);
+    let radiusOfHighestRank = widthToRadiusScale(width);
 
     // These will be set in create_nodes and create_vis
     let bubbles = null;
@@ -75,7 +75,7 @@ export default function renderRankingData(width, height, data) {
     
     
     
-    const radiusScale = d3.scale.pow()
+    let radiusScale = d3.scale.pow()
         .exponent(0.5)
         .domain([0, maxAmount])
         .range([0, radiusOfHighestRank]);
@@ -444,7 +444,37 @@ export default function renderRankingData(width, height, data) {
     }, 5000, 8);
 
     
+    /*
+    *   handle window resizing
+    *       -re-render bubbles so they stay centered
+    *
+    */
+    window.addEventListener("resize", () => {
+        let tempWidth = document.documentElement.clientWidth * .7;
+        let tempHeight = document.documentElement.clientHeight * .7;
 
+        if(document.documentElement.clientWidth < 1023) {
+            tempWidth = document.documentElement.clientWidth;
+        }
+
+        center = { x: tempWidth / 2, y: tempHeight / 2 };
+
+        radiusOfHighestRank = widthToRadiusScale(tempWidth);
+
+        radiusScale = d3.scale.pow()
+            .exponent(0.5)
+            .domain([0, maxAmount])
+            .range([0, radiusOfHighestRank]);
+
+        bubbles.transition()
+            .duration(2000)
+            .attr("r", function(d) { 
+                return radiusScale(+d.pomodoros); 
+            });
+
+        groupBubbles();
+
+    });
 
 }
 

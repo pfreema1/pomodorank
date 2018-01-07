@@ -66,7 +66,6 @@ class RankingsDataVis extends Component {
             //width is 100% of width
             if(document.documentElement.clientWidth < 1023) {
                 width = document.documentElement.clientWidth;
-                height = document.documentElement.clientHeight * .7;
             } 
             
             renderRankingData(width, height, data);
