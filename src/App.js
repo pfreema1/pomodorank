@@ -61,7 +61,6 @@ class App extends Component {
     // console.log(typeof allCookies);
   
     if(!allCookies.includes("userId")) {
-      // console.log("no cookie found - running get request for user id");
       //make get request to api to get id
       fetch('https://serene-escarpment-46084.herokuapp.com/randomId', {
         method: 'get',
