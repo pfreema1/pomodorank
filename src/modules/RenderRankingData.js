@@ -124,7 +124,7 @@ export default function renderRankingData(width, height, data) {
     bubbles = canvas.selectAll(".bubble")
         .data(nodes);
 
-    // Define the div for the tooltip
+    // Define the div for the tooltips
     const clickToolTip = d3.select("body").append("div")	
         .attr("class", "tooltip add-border");		
 
@@ -132,6 +132,7 @@ export default function renderRankingData(width, height, data) {
     const hoverToolTip = d3.select("body").append("div")
         .attr("class", "tooltip add-border");
 
+    let touchBool = false;
 
     //create new circle elements each with class `bubble`.
     //there will be on circle.bubble for each object in the nodes array
@@ -150,9 +151,15 @@ export default function renderRankingData(width, height, data) {
         .on("mousemove", handleMouseMove)
         .on("mouseout", function(d) {
             //only run if on larger screens (see explanation in .on click section)
-            if(document.documentElement.clientWidth > 1023) {     
+            // if(document.documentElement.clientWidth > 1023) {    
+            if(!touchBool) {    
+                console.log("mouseout"); 
                 hoverToolTip.style("opacity", 0);
             }
+        })
+        .call(function() {
+            //reset touch bool
+            touchBool = false;
         });
         
 
@@ -180,6 +187,8 @@ export default function renderRankingData(width, height, data) {
     function handleTouchStart(d) {
 
         let originalBubbleRadius = d.radius;
+
+        touchBool = true;
 
         //animate circle with radius change
         d3.select(this)
@@ -256,8 +265,10 @@ export default function renderRankingData(width, height, data) {
     */
     function handleMouseOver(d) {
         
+        console.log("mouseover");
         //only run if on larger screens (see explanation in .on click section)
-        if(document.documentElement.clientWidth > 1023) {
+        // if(document.documentElement.clientWidth > 1023) {
+        if(!touchBool) {  
             //animate bubble
             let originalBubbleRadius = d.radius;
 
@@ -288,9 +299,10 @@ export default function renderRankingData(width, height, data) {
     *
     */
     function handleMouseMove(d) {
+        console.log("mousemove");
         //only run if on larger screens (see explanation in .on click section)
-        if(document.documentElement.clientWidth > 1023) {
-
+        // if(document.documentElement.clientWidth > 1023) {
+        if(!touchBool) {  
             hoverToolTip
                 .html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
                 .style("position", "absolute")

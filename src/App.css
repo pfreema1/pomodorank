@@ -103,7 +103,7 @@ body{
   // display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 70%;
   width: 100%;
   color: white;
   background-color: var(--highlightButtonColor);
@@ -121,7 +121,7 @@ body{
   justify-content: center;
   align-items: center;
   height: 30vh;
-  margin-top: 100px;
+  // margin-top: 100px;
 }
 
 .time-and-play-reset-button-container {
@@ -526,7 +526,7 @@ code {
 
 .rankings-container {
   background-color: var(--rankingsContainerBackgroundColor);
-  height: 100vh;
+  height: 70%;
   // width: 100vw;
   color: white;
   letter-spacing: 1px;
@@ -547,7 +547,7 @@ code {
   display: inline-block;
   position: relative;
   width: 100%;
-  padding-bottom: 50%; /* aspect ratio */
+  // padding-bottom: 50%; /* aspect ratio */
   vertical-align: top;
   // overflow: hidden;
   overflow: visible;

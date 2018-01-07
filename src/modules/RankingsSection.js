@@ -60,7 +60,7 @@ class RankingsDataVis extends Component {
             data = response;
 
             let width = document.documentElement.clientWidth * .7;
-            let height = document.documentElement.clientHeight;
+            let height = document.documentElement.clientHeight * .7;
             
             //check if width is less than 1200 px, if so, make sure
             //width is 100% of width
