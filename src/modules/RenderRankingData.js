@@ -18,12 +18,12 @@ export default function renderRankingData(width, height, data) {
         .attr("transform", "translate(0, 0)");
 
     //scale: canvas width to amount of "charge" 
-    const widthToChargeScale = d3.scale.linear()
+    let widthToChargeScale = d3.scale.linear()
         .domain([250, 900])
         .range([0, -700]);
 
     //create layout
-    const force = d3.layout.force()
+    let force = d3.layout.force()
         .size([width, height - 60])
         // .charge(charge)
         .gravity(-0.01)
@@ -44,7 +44,7 @@ export default function renderRankingData(width, height, data) {
     //setup a scale for max radius:  880px wide canvas = 100 max radius
     const widthToRadiusScale = d3.scale.linear()
         .domain([0, 900])
-        .range([0, 100]);
+        .range([0, 80]);
 
     //controls max size of circles
     let radiusOfHighestRank = widthToRadiusScale(width);
@@ -128,7 +128,7 @@ export default function renderRankingData(width, height, data) {
 
 
     const hoverToolTip = d3.select("body").append("div")
-        .attr("class", "tooltip add-border");
+        .attr("class", "hover-tooltip add-border");
 
     let touchBool = false;
 
@@ -151,7 +151,7 @@ export default function renderRankingData(width, height, data) {
             //only run if on larger screens (see explanation in .on click section)
             // if(document.documentElement.clientWidth > 1023) {    
             if(!touchBool) {    
-                hoverToolTip.style("opacity", 0);
+                hoverToolTip.style("transform", "scale(1,0)");
             }
         })
         .call(function() {
@@ -300,7 +300,8 @@ export default function renderRankingData(width, height, data) {
             hoverToolTip
                 .html(funnyFacesArray[d.characterNum] + "<br/><div>" + d.username + "<br/>" + d.pomodoros + "  <img src='" + tomatoIcon + "' class='hover-tomato-icon'></div>")
                 .style("position", "absolute")
-                .style("opacity", 1)
+                // .style("opacity", 1)
+                .style("transform", "scale(1,1)")
                 .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY - 150) + "px");
         }
@@ -466,11 +467,30 @@ export default function renderRankingData(width, height, data) {
             .domain([0, maxAmount])
             .range([0, radiusOfHighestRank]);
 
+        /*
+            //scale: canvas width to amount of "charge" 
+            let widthToChargeScale = d3.scale.linear()
+                .domain([250, 900])
+                .range([0, -700]);
+
+            //create layout
+            const force = d3.layout.force()
+                .size([width, height - 60])
+                // .charge(charge)
+                .gravity(-0.01)
+                .friction(0.59)
+                .charge(widthToChargeScale(width));
+
+        */
+
+        force.charge(widthToChargeScale(tempWidth));
+
         bubbles.transition()
             .duration(2000)
             .attr("r", function(d) { 
                 return radiusScale(+d.pomodoros); 
             });
+            
 
         groupBubbles();
 

@@ -111,6 +111,7 @@ body{
 
 .time-display-wrapper {
   width: 100%;
+  padding-top: 50px;
   // height: 60vh;
   // padding-left: 200px;
   // margin-left: 200px;
@@ -647,6 +648,27 @@ svg#chart {
   line-height: 25px;
 }
 
+.hover-tooltip {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  position: absolute;
+  pointer-events: none;
+  text-align: center;
+  background-color: #EAEAEA;
+  border-radius: var(--borderRoundness);
+  padding: 20px;
+  white-space: nowrap;
+  color: var(--mainTextColor);
+  // opacity: 0;
+  transform: scale(1, 0);
+  transition: transform 0.3s ease-in-out;
+}
+
+.hover-tooltip div {
+  font-family: var(--primaryFont);
+  margin-top: 20px;
+  line-height: 25px;
+}
+
 
 
 .fade-in-click-tooltip {
@@ -703,6 +725,7 @@ svg#chart {
 
     .time-display-wrapper {
       // width: 30%;
+      padding-top: 0px;
     }
 
     .rankings-container {
