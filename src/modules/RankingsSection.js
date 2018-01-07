@@ -141,7 +141,7 @@ class TextRankings extends React.Component {
                 if(index < maxUsersToShowInTextRanking) {
                     return  <div className="rankings-single-line">
                                 <div>
-                                    #{index}
+                                    #{index + 1}
                                 </div>
                                 <div>
                                     {funnyFacesArray[elem.characterNum]}
