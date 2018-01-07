@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import renderRankingData from './RenderRankingData';
 import funnyFacesArray from '../modules/FunnyFacesArray';
-
+import tomatoIcon from '../images/tomatoIcon.png';
 
 
 class RankingsSection extends Component {
@@ -9,26 +9,26 @@ class RankingsSection extends Component {
         super(props);
 
         this.state = {
-            sortedNodes: null
+            // sortedNodes: null
         };
 
-        this.onReceivedSortedNodes = this.onReceivedSortedNodes.bind(this);
+        // this.onReceivedSortedNodes = this.onReceivedSortedNodes.bind(this);
     }
 
-    onReceivedSortedNodes(sortedNodes) {
-        // console.log(sortedNodes);
-        // console.log(typeof sortedNodes);
-        this.setState({
-            sortedNodes: sortedNodes
-        });
-    }
+    // onReceivedSortedNodes(sortedNodes) {
+    //     // console.log(sortedNodes);
+    //     // console.log(typeof sortedNodes);
+    //     this.setState({
+    //         sortedNodes: sortedNodes
+    //     });
+    // }
 
 
     render() {
         return(
             <div className="rankings-container">
-                <RankingsDataVis onReceivedSortedNodes={this.onReceivedSortedNodes}/>
-                <TextRankings sortedNodes={this.state.sortedNodes}/>
+                <RankingsDataVis onReceivedSortedNodes={this.props.onReceivedSortedNodes}/>
+                {/* <TextRankings sortedNodes={this.state.sortedNodes}/> */}
             </div>
         );
     }
@@ -104,77 +104,82 @@ class RankingsDataVis extends Component {
 
 
 
-class TextRankings extends React.Component {
-    constructor(props) {
-        super(props);
+// class TextRankings extends React.Component {
+//     constructor(props) {
+//         super(props);
 
-        this.state = {
-            sortedNodes: null,
-            readyToRender: false
-        };
+//         this.state = {
+//             sortedNodes: null,
+//             readyToRender: false
+//         };
 
-    }
+//     }
 
-    componentWillReceiveProps(nextProps) {
-        console.log(nextProps);
+//     componentWillReceiveProps(nextProps) {
+//         console.log(nextProps);
 
-        if(nextProps.sortedNodes) {
-            this.setState({
-                readyToRender: true,
-                sortedNodes: nextProps.sortedNodes
-            });
-        }
+//         if(nextProps.sortedNodes) {
+//             this.setState({
+//                 readyToRender: true,
+//                 sortedNodes: nextProps.sortedNodes
+//             });
+//         }
         
-    }
+//     }
 
 
-
-    render() {
+//     render() {
         
-        let textRanking;
-        const maxUsersToShowInTextRanking = 10;
+//         let textRanking;
+//         const maxUsersToShowInTextRanking = 10;
 
-        if(this.state.readyToRender) {
-            // textRanking = <div>READY TO GO BRO</div>;
-            textRanking = this.state.sortedNodes.map(function(elem, index) {
-                // console.log(elem);
-                if(index < maxUsersToShowInTextRanking) {
-                    return  <div className="rankings-single-line">
-                                <div>
-                                    #{index + 1}
-                                </div>
-                                <div>
-                                    {funnyFacesArray[elem.characterNum]}
-                                </div>
-                                <div>
-                                    {elem.username}
-                                </div>
-                                <div>
-                                    {elem.pomodoros}
-                                </div>
+//         if(this.state.readyToRender) {
+//             // textRanking = <div>READY TO GO BRO</div>;
+//             textRanking = this.state.sortedNodes.map(function(elem, index) {
+//                 // console.log(elem);
+//                 if(index < maxUsersToShowInTextRanking) {
+//                     return  <div className="text-rankings-single-line"
+//                                 key={elem.userId}>
+//                                 <div className="text-rankings-number-container">
+//                                     #{index + 1}
+//                                 </div>
+//                                 <div className="text-rankings-character-container add-border">
+//                                     <code className="text-rankings-code">
+//                                         {funnyFacesArray[elem.characterNum]}
+//                                     </code>
+
+//                                     <div className="text-rankings-pomodoros-container">
+//                                         {elem.pomodoros}
+//                                         <img src={tomatoIcon} className="hover-tomato-icon"/>
+//                                     </div>
+//                                 </div>
+//                                 <div className="text-rankings-username-container">
+//                                     {elem.username}
+//                                 </div>
                                 
-                            </div>;
-                } else {
-                    return;
-                }
+                                
+//                             </div>;
+//                 } else {
+//                     return;
+//                 }
                 
-            });
+//             });
 
             
 
 
-        } else {
-            textRanking = <div>YOU TOO SOON DOO</div>;
-        }
+//         } else {
+//             textRanking = <div>YOU TOO SOON DOO</div>;
+//         }
 
-        return(
-            <div className="text-rankings-container box-shadow add-border">
-                <h1>RANKING</h1>
-                {textRanking}
-            </div>
-        );
-    }
-}
+//         return(
+//             <div className="text-rankings-container box-shadow add-border">
+//                 <h1>RANKINGS</h1>
+//                 {textRanking}
+//             </div>
+//         );
+//     }
+// }
 
 
 

@@ -6,6 +6,7 @@ import SettingsOverlay from './modules/SettingsOverlay';
 import HeaderSection from './modules/HeaderSection';
 import MainTimerSection from './modules/MainTimerSection';
 import RankingsSection from './modules/RankingsSection';
+import TextRankings from './modules/TextRankings';
 
 /* sounds */
 import spookySound from './sounds/2spooky.mp3';
@@ -36,7 +37,8 @@ class App extends Component {
         notifications: window.Notification && Notification.permission === "granted" ? true : false
       },
       firstClickHasBeenClicked: false,
-      flashNotice: false
+      flashNotice: false,
+      sortedNodes: null
     };
 
     this.audio = new Audio();
@@ -50,6 +52,7 @@ class App extends Component {
     this.updateCookie = this.updateCookie.bind(this);
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
     this.handleSettingsCloseButtonClick = this.handleSettingsCloseButtonClick.bind(this);
+    this.onReceivedSortedNodes = this.onReceivedSortedNodes.bind(this);
   }
 
   componentDidMount() {
@@ -106,15 +109,7 @@ class App extends Component {
     }
   }
 
-  // mobileCheck() {
-  //   //check if user is on mobile - disable notifications if true
-  //   if (/Mobi/.test(navigator.userAgent) || /Android/i.test(navigator.userAgent)) {
-  //     // mobile!
-  //     return true;
-  //   } else {
-  //     return 
-  //   }
-  // }
+
 
   isNewNotificationSupported() {
     if(!window.Notification || !Notification.requestPermission) {
@@ -179,7 +174,6 @@ class App extends Component {
         or play button
     */
 
-    // console.log("FIRST CLICK HANDLER FIRING");
 
     this.audio.src = this.soundArray[this.state.userSettings.soundNum - 1];
     this.audio.volume = 0;    // volume cannot be changed on ios!
@@ -292,7 +286,13 @@ class App extends Component {
     }, 3000);
   }
 
-  
+  onReceivedSortedNodes(sortedNodes) {
+    // console.log(sortedNodes);
+    // console.log(typeof sortedNodes);
+    this.setState({
+        sortedNodes: sortedNodes
+    });
+  }
 
   render() {
     return (
@@ -323,9 +323,12 @@ class App extends Component {
           </div>  
           <RankingsSection 
             userSettings={this.state.userSettings}
+            onReceivedSortedNodes={this.onReceivedSortedNodes}
           />
         </div>
         
+        <TextRankings sortedNodes={this.state.sortedNodes}/>
+
       </div>
     );
   }

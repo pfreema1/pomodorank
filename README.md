@@ -8,7 +8,7 @@ A pomodoro timer that tracks users' finished pomodoro blocks and rank relative t
 
 <br>
 
-<h3>Tech</h3>
+<h3>Built With</h3>
 React</br>
 D3</br>
 MongoDb</br>
