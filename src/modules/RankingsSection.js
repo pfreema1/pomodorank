@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import renderRankingData from './RenderRankingData';
-import funnyFacesArray from '../modules/FunnyFacesArray';
-import tomatoIcon from '../images/tomatoIcon.png';
+// import funnyFacesArray from '../modules/FunnyFacesArray';
+// import tomatoIcon from '../images/tomatoIcon.png';
 
 
 class RankingsSection extends Component {

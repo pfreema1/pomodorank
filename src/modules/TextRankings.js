@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import renderRankingData from './RenderRankingData';
+// import renderRankingData from './RenderRankingData';
 import funnyFacesArray from '../modules/FunnyFacesArray';
 import tomatoIcon from '../images/tomatoIcon.png';
 
-class TextRankings extends React.Component {
+class TextRankings extends Component {
     constructor(props) {
         super(props);
 
@@ -49,7 +49,8 @@ class TextRankings extends React.Component {
 
                                 <div className="text-rankings-pomodoros-container">
                                     {elem.pomodoros}
-                                    <img src={tomatoIcon} className="hover-tomato-icon"/>
+                                    <img src={tomatoIcon} className="hover-tomato-icon"
+                                    alt="tomato icon"/>
                                 </div>
                             </div>
 
@@ -59,7 +60,7 @@ class TextRankings extends React.Component {
                             
                         </div>;
             } else {
-                return;
+                return null;
             }
                 
             });
