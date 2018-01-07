@@ -114,6 +114,7 @@ export default function renderRankingData(width, height, data) {
 
     nodes = createNodes(data.children);
 
+    
 
     // Set the force's nodes to our newly created nodes array.
     force.nodes(nodes);
@@ -495,6 +496,9 @@ export default function renderRankingData(width, height, data) {
         groupBubbles();
 
     });
+
+
+    return nodes;
 
 }
 

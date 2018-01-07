@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-
 import renderRankingData from './RenderRankingData';
-
-/* funny text faces */
-// import funnyFacesArray from '../modules/FunnyFacesArray';
+import funnyFacesArray from '../modules/FunnyFacesArray';
 
 
 
@@ -11,17 +8,27 @@ class RankingsSection extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            sortedNodes: null
+        };
 
+        this.onReceivedSortedNodes = this.onReceivedSortedNodes.bind(this);
+    }
 
+    onReceivedSortedNodes(sortedNodes) {
+        // console.log(sortedNodes);
+        // console.log(typeof sortedNodes);
+        this.setState({
+            sortedNodes: sortedNodes
+        });
     }
 
 
     render() {
         return(
             <div className="rankings-container">
-                <RankingsDataVis />
-
+                <RankingsDataVis onReceivedSortedNodes={this.onReceivedSortedNodes}/>
+                <TextRankings sortedNodes={this.state.sortedNodes}/>
             </div>
         );
     }
@@ -56,7 +63,7 @@ class RankingsDataVis extends Component {
         fetch("https://serene-escarpment-46084.herokuapp.com/getDbInfo", fetchOptions)
         .then(function(response) {
             return response.json();
-        }).then(function(response) {
+        }).then((response) => {
             data = response;
 
             let width = document.documentElement.clientWidth * .7;
@@ -68,7 +75,13 @@ class RankingsDataVis extends Component {
                 width = document.documentElement.clientWidth;
             } 
             
-            renderRankingData(width, height, data);
+            //renderRankingData renders and returns sorted nodes
+            let sortedNodes = renderRankingData(width, height, data);
+
+           
+
+            //send data to parent
+            this.props.onReceivedSortedNodes(sortedNodes);
 
         }).catch(function(err) {
             console.log(err);
@@ -88,6 +101,82 @@ class RankingsDataVis extends Component {
         );
     }
 }
+
+
+
+class TextRankings extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            sortedNodes: null,
+            readyToRender: false
+        };
+
+    }
+
+    componentWillReceiveProps(nextProps) {
+        console.log(nextProps);
+
+        if(nextProps.sortedNodes) {
+            this.setState({
+                readyToRender: true,
+                sortedNodes: nextProps.sortedNodes
+            });
+        }
+        
+    }
+
+
+
+    render() {
+        
+        let textRanking;
+        const maxUsersToShowInTextRanking = 10;
+
+        if(this.state.readyToRender) {
+            // textRanking = <div>READY TO GO BRO</div>;
+            textRanking = this.state.sortedNodes.map(function(elem, index) {
+                // console.log(elem);
+                if(index < maxUsersToShowInTextRanking) {
+                    return  <div className="rankings-single-line">
+                                <div>
+                                    #{index}
+                                </div>
+                                <div>
+                                    {funnyFacesArray[elem.characterNum]}
+                                </div>
+                                <div>
+                                    {elem.username}
+                                </div>
+                                <div>
+                                    {elem.pomodoros}
+                                </div>
+                                
+                            </div>;
+                } else {
+                    return;
+                }
+                
+            });
+
+            
+
+
+        } else {
+            textRanking = <div>YOU TOO SOON DOO</div>;
+        }
+
+        return(
+            <div className="text-rankings-container box-shadow add-border">
+                <h1>RANKING</h1>
+                {textRanking}
+            </div>
+        );
+    }
+}
+
+
 
 
 
