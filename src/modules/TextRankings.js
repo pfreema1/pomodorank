@@ -69,9 +69,13 @@ class TextRankings extends React.Component {
         }
 
         return(
-            <div className="text-rankings-container box-shadow add-border">
-                <h1>RANKINGS</h1>
-                {textRanking}
+            <div className="text-rankings-wrapper">
+                <div className="header-logo top-10-header">
+                    RANKINGS
+                </div>
+                <div className="text-rankings-container box-shadow add-border">
+                    {textRanking}
+                </div>
             </div>
         );
     }

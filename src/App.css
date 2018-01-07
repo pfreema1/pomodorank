@@ -795,6 +795,10 @@ h1 {
   margin: 20px 0 20px 0;
 }
 
+.top-10-header {
+  margin: 0px 0px 20px 0px;
+}
+
 
 /*
   for larger screens
@@ -802,18 +806,22 @@ h1 {
 */
 @media (min-width: 1023px) {
 
-.main-container {
-      display: flex;
-    }
+  .main-container {
+    display: flex;
+  }
 
-    .time-display-wrapper {
-      // width: 30%;
-      padding-top: 0px;
-    }
+  .time-display-wrapper {
+    // width: 30%;
+    padding-top: 0px;
+  }
 
-    .rankings-container {
-      width: 70%;
-    }
+  .rankings-container {
+    width: 70%;
+  }
+
+  .top-10-header {
+    margin-top: 100px;
+  }
 
 
 }
