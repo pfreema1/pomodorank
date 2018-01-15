@@ -63,7 +63,7 @@ class App extends Component {
 
     // console.log(typeof allCookies);
   
-    if(!allCookies.includes("userId")) {
+    if(!allCookies.includes("userId") || !allCookies.includes("volume") || !allCookies.includes("username")) {
       //make get request to api to get id
       fetch('https://serene-escarpment-46084.herokuapp.com/randomId', {
         method: 'get',
@@ -134,13 +134,13 @@ class App extends Component {
   updateCookie() {
     
 
-    this.createCookie("userId", this.state.userSettings.userId, 7);
-    this.createCookie("characterNum", this.state.userSettings.characterNum, 7);
-    this.createCookie("username", this.state.userSettings.username, 7);
-    this.createCookie("soundNum", this.state.userSettings.soundNum, 7);
-    this.createCookie("volume", this.state.userSettings.volume, 7);
-    this.createCookie("isNewNotificationSupported", this.state.userSettings.isNewNotificationSupported, 7);
-    this.createCookie("notifications", this.state.userSettings.notifications, 7);
+    this.createCookie("userId", this.state.userSettings.userId, 367);
+    this.createCookie("characterNum", this.state.userSettings.characterNum, 367);
+    this.createCookie("username", this.state.userSettings.username, 367);
+    this.createCookie("soundNum", this.state.userSettings.soundNum, 367);
+    this.createCookie("volume", this.state.userSettings.volume, 367);
+    this.createCookie("isNewNotificationSupported", this.state.userSettings.isNewNotificationSupported, 367);
+    this.createCookie("notifications", this.state.userSettings.notifications, 367);
   }
 
   createCookie(name,value,days) {

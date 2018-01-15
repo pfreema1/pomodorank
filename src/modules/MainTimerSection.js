@@ -267,7 +267,6 @@ class TimeDisplay extends Component {
       characterNum: this.props.userSettings.characterNum
     };
 
-    console.log(payload);
 
     fetch('https://serene-escarpment-46084.herokuapp.com/handlePomodoroFinish', {
       method: 'post',
@@ -281,7 +280,7 @@ class TimeDisplay extends Component {
       return res.text();
     })
     .then(function(res) {
-      console.log(res);
+      // console.log(res);
     }).catch(function(err) {
       console.log(err);
     });

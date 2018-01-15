@@ -15,7 +15,6 @@ class TextRankings extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps);
 
         if(nextProps.sortedNodes) {
             this.setState({
