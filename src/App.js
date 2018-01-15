@@ -274,8 +274,8 @@ class App extends Component {
     });
 
     //save new username into cookie
-    this.createCookie("username", newName, 7);
-    this.createCookie("characterNum", charNum, 7);
+    this.createCookie("username", newName, 367);
+    this.createCookie("characterNum", charNum, 367);
 
     //run a method to reset the flash state
     //using arrow function so context of this doesnt change!
