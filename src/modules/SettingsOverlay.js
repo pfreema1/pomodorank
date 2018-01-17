@@ -13,7 +13,9 @@ class SettingsOverlay extends Component {
             fadeGlow: false,
             characterNum: props.userSettings.characterNum,
             username: props.userSettings.username,
-            soundNum: props.userSettings.soundNum
+            soundNum: props.userSettings.soundNum,
+            volume: props.userSettings.volume,
+            notifications: props.userSettings.notifications
         };
 
         this.settingsSnapShot = {};
@@ -41,9 +43,26 @@ class SettingsOverlay extends Component {
                 this.setState({
                     characterNum: nextProps.userSettings.characterNum,
                     username: nextProps.userSettings.username
-                }, () => console.log(this.state.characterNum));
+                });
+        }
+
+        if(nextProps.userSettings.soundNum !== this.state.soundNum) {
+            this.setState({
+                soundNum: nextProps.userSettings.soundNum
+            });
         }
         
+        if(nextProps.userSettings.volume !== this.state.volume) {
+            this.setState({
+                volume: nextProps.userSettings.volume
+            });
+        }
+
+        if(nextProps.userSettings.notifications !== this.state.notifications) {
+            this.setState({
+                notifications: nextProps.userSettings.notifications
+            });
+        }
     }
 
     updateCharacter(newCharNum) {
@@ -66,10 +85,18 @@ class SettingsOverlay extends Component {
 
     updateSettingsSnapShotVolume(volume) {
         this.settingsSnapShot.volume = volume;
+
+        this.setState({
+            volume: volume
+        });
     }
 
     updateSettingsSnapShotNotifications(notifications) {
         this.settingsSnapShot.notifications = notifications;
+
+        this.setState({
+            notifications: notifications
+        });
     }
 
     closeButtonClickHandler() {
@@ -82,6 +109,9 @@ class SettingsOverlay extends Component {
 
         //let parent know
         this.props.handleSettingsCloseButtonClick();
+
+        //reset settingsSnapShot
+        this.settingsSnapShot = {};
     }
 
     resetIconAnim() {
@@ -122,7 +152,6 @@ class SettingsOverlay extends Component {
             <div className={"settings-overlay " + 
             (this.state.showOverlay ? "slide-settings-in" : "")}
             >
-                <pre>{JSON.stringify(this.props, null, 2)}</pre>
 
                 <div onClick={this.closeButtonClickHandler}
                     className="close-button-container"
@@ -154,12 +183,14 @@ class SettingsOverlay extends Component {
                         updateSettingsSnapShotSound={this.updateSettingsSnapShotSound}
                         updateSettingsSnapShotVolume={this.updateSettingsSnapShotVolume}
                         soundNum={this.state.soundNum}
+                        volume={this.state.volume}
                     />
                     
                     <NotificationsCard 
                         // handleSettingsChange={this.props.settingsChange}
                         userSettings={this.props.userSettings}
                         updateSettingsSnapShotNotifications={this.updateSettingsSnapShotNotifications}
+                        notifications={this.state.notifications}
                     />
 
                     <div className="save-settings-button-container">
@@ -240,7 +271,6 @@ class UsernameCard extends Component {
     render() {
         return(
             <div className="options-card box-shadow-normal">
-            <pre>{JSON.stringify(this.state, null, 2)}</pre>
                 <div>
                     Username
                 </div>
@@ -272,8 +302,8 @@ class SoundCard extends Component {
         super(props);
 
         this.state = {
-            soundValue: props.userSettings.soundValue,
-            volumeValue: props.userSettings.volumeValue
+            soundValue: props.soundNum,
+            volumeValue: props.volume
         };
         
         this.handleSoundChange = this.handleSoundChange.bind(this);
@@ -282,10 +312,9 @@ class SoundCard extends Component {
 
     componentWillReceiveProps(nextProps) {
         
-        
         this.setState({
             soundValue: nextProps.soundNum,
-            volumeValue: nextProps.userSettings.volume
+            volumeValue: nextProps.volume
         });
     }
 
@@ -298,9 +327,9 @@ class SoundCard extends Component {
         // this.props.handleSettingsChange(e.target.id, parseInt(e.target.value, 10));
         this.props.updateSettingsSnapShotSound(parseInt(e.target.value, 10));
 
-        this.setState({
-            soundValue: e.target.value
-        });
+        // this.setState({
+        //     soundValue: e.target.value
+        // });
     }
 
     handleVolumeChange(e) {
@@ -309,15 +338,14 @@ class SoundCard extends Component {
         // this.props.handleSettingsChange(e.target.id, parseFloat(e.target.value, 10));
         this.props.updateSettingsSnapShotVolume(parseFloat(e.target.value, 10));
 
-        this.setState({
-            volumeValue: parseFloat(e.target.value, 10)
-        });
+        // this.setState({
+        //     volumeValue: parseFloat(e.target.value, 10)
+        // });
     }
 
     render() {
         return(
             <div className="options-card box-shadow-normal soundcard-container">
-            <pre>{JSON.stringify(this.state, null, 2)}</pre>
                 <div>
                     <div>
                         Sound
@@ -357,7 +385,7 @@ class NotificationsCard extends Component {
 
 
         this.state = {
-            notificationsOn: props.userSettings.notfications,
+            notifications: props.notifications,
             isNewNotificationSupported: props.userSettings.isNewNotificationSupported
         };
 
@@ -368,7 +396,7 @@ class NotificationsCard extends Component {
     componentWillReceiveProps(nextProps) {
         
         this.setState({
-            notificationsOn: nextProps.userSettings.notifications,
+            notifications: nextProps.notifications,
             isNewNotificationSupported: nextProps.userSettings.isNewNotificationSupported
         });
     }
@@ -378,11 +406,11 @@ class NotificationsCard extends Component {
         //tell parent controller a setting has changed
         // this.props.handleSettingsChange("notifications", !this.state.notificationsOn);
 
-        this.props.updateSettingsSnapShotNotifications(!this.state.notificationsOn);
+        this.props.updateSettingsSnapShotNotifications(!this.state.notifications);
 
-        this.setState({
-            notificationsOn: !this.state.notificationsOn
-        });
+        // this.setState({
+        //     notificationsOn: !this.state.notificationsOn
+        // });
 
     }
 
@@ -391,7 +419,6 @@ class NotificationsCard extends Component {
         return(
             <div className={"options-card box-shadow-normal notifications-container " + 
                 (this.state.isNewNotificationSupported ? "" : "dont-show")} >
-                <pre>{JSON.stringify(this.state, null, 2)}</pre>
                 <div>
                     Notifications
                 </div>
@@ -399,10 +426,10 @@ class NotificationsCard extends Component {
                     onClick={this.handleClick}
                 >
                     <div className={"toggle-background " + 
-                        (this.state.notificationsOn ? "toggle-bg-anim" : "")}>
+                        (this.state.notifications ? "toggle-bg-anim" : "")}>
                     </div>
                     <div className={"toggle-button box-shadow-normal " + 
-                        (this.state.notificationsOn ? "move-right-anim" : "")}>
+                        (this.state.notifications ? "move-right-anim" : "")}>
                     
                     </div>
 
