@@ -66,8 +66,7 @@ class SettingsOverlay extends Component {
     }
 
     updateCharacter(newCharNum) {
-        // console.log("updateCharacter being called");
-        // console.log("newCharNum:  " + newCharNum);
+
         this.setState({
             characterNum: newCharNum
         });
@@ -81,6 +80,9 @@ class SettingsOverlay extends Component {
         this.setState({
             soundNum: soundNum
         });
+
+        //call method in App.js to play sound
+        this.props.playSoundFromSettings(soundNum, parseFloat(this.state.volume, 10));
     }
 
     updateSettingsSnapShotVolume(volume) {
@@ -133,12 +135,6 @@ class SettingsOverlay extends Component {
 
         this.settingsSnapShot.username = usrString;
         this.settingsSnapShot.characterNum = this.state.characterNum;
-        //get character number at time of submit button click
-        // let charNum = this.state.characterNum;
-        // console.log("charNum before running submission in parent:  " + charNum);
-
-        //update userSettings in parent
-        // this.props.handleUsernameChange(usrString, charNum);
 
         //send settings snapshot to parent and let parent sort out new settings
         this.props.handleSaveSettingsClick(this.settingsSnapShot);
@@ -235,11 +231,6 @@ class UsernameCard extends Component {
         if(newCharNum === -1) {
             newCharNum = 162;
         }
-        //scroll through funny faces array to the left 
-        // this.setState({
-        //     characterNum: newCharNum,
-        //     fadeGlow: true
-        // });
         
         setTimeout(this.resetIconAnim, 500);
 
@@ -251,11 +242,6 @@ class UsernameCard extends Component {
         if(newCharNum === 163) {
             newCharNum = 0;
         }
-        //scroll through funny faces array to the left 
-        // this.setState({
-        //     characterNum: newCharNum,
-        //     fadeGlow: true
-        // });
         
         setTimeout(this.resetIconAnim, 500);
 
@@ -320,27 +306,17 @@ class SoundCard extends Component {
 
 
     handleSoundChange(e) {
-        //play sound in parent
-        // this.props.handleSound(e.target.value, this.state.volumeValue);
 
         //tell parent controller a setting has changed
-        // this.props.handleSettingsChange(e.target.id, parseInt(e.target.value, 10));
         this.props.updateSettingsSnapShotSound(parseInt(e.target.value, 10));
 
-        // this.setState({
-        //     soundValue: e.target.value
-        // });
     }
 
     handleVolumeChange(e) {
 
         //tell parent controller a setting has changed
-        // this.props.handleSettingsChange(e.target.id, parseFloat(e.target.value, 10));
         this.props.updateSettingsSnapShotVolume(parseFloat(e.target.value, 10));
 
-        // this.setState({
-        //     volumeValue: parseFloat(e.target.value, 10)
-        // });
     }
 
     render() {
@@ -404,14 +380,7 @@ class NotificationsCard extends Component {
     handleClick(e) {
     
         //tell parent controller a setting has changed
-        // this.props.handleSettingsChange("notifications", !this.state.notificationsOn);
-
         this.props.updateSettingsSnapShotNotifications(!this.state.notifications);
-
-        // this.setState({
-        //     notificationsOn: !this.state.notificationsOn
-        // });
-
     }
 
     render() {

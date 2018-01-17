@@ -63,10 +63,8 @@ class App extends Component {
     //update userSettings
     let allCookies = document.cookie;
 
-    // console.log(typeof allCookies);
   
     if(!allCookies.includes("userId") || !allCookies.includes("volume") || !allCookies.includes("username")) {
-      console.log("NO PROFILE FOUND");
       //make get request to api to get id
       fetch('https://serene-escarpment-46084.herokuapp.com/randomId', {
         method: 'get',
@@ -94,8 +92,7 @@ class App extends Component {
 
 
     } else {
-      // console.log("cookie found:  " + allCookies);
-      // console.log("PROFILE FOUND");
+
       //set state according to cookies
       this.setState({
         userSettings: {
@@ -213,8 +210,10 @@ class App extends Component {
 
   }
 
-  playSoundFromSettings() {
-    
+  playSoundFromSettings(soundNum, volume) {
+    this.audio.src = this.soundArray[soundNum - 1];
+    this.audio.volume = volume;
+    this.audio.play();
   }
 
 
@@ -272,8 +271,6 @@ class App extends Component {
   }
 
   onReceivedSortedNodes(sortedNodes) {
-    // console.log(sortedNodes);
-    // console.log(typeof sortedNodes);
     this.setState({
         sortedNodes: sortedNodes
     });
@@ -291,6 +288,7 @@ class App extends Component {
             flashNotice={this.state.flashNotice}
             handleSettingsCloseButtonClick={this.handleSettingsCloseButtonClick}
             handleSaveSettingsClick={this.handleSaveSettingsClick}
+            playSoundFromSettings={this.playSoundFromSettings}
           />
           <HeaderSection 
             handleSettingsButtonClick={this.handleSettingsButtonClick}
