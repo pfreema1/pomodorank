@@ -47,12 +47,13 @@ class App extends Component {
 
     this.handleSettingsButtonClick = this.handleSettingsButtonClick.bind(this);
     this.handleSoundPlaying = this.handleSoundPlaying.bind(this);
-    this.handleSettingsChange = this.handleSettingsChange.bind(this);
+    // this.handleSettingsChange = this.handleSettingsChange.bind(this);
     this.firstClickHandler = this.firstClickHandler.bind(this);
     this.updateCookie = this.updateCookie.bind(this);
-    this.handleUsernameChange = this.handleUsernameChange.bind(this);
+    // this.handleProfileChange = this.handleProfileChange.bind(this);
     this.handleSettingsCloseButtonClick = this.handleSettingsCloseButtonClick.bind(this);
     this.onReceivedSortedNodes = this.onReceivedSortedNodes.bind(this);
+    this.handleSaveSettingsClick = this.handleSaveSettingsClick.bind(this);
   }
 
   componentDidMount() {
@@ -64,6 +65,7 @@ class App extends Component {
     // console.log(typeof allCookies);
   
     if(!allCookies.includes("userId") || !allCookies.includes("volume") || !allCookies.includes("username")) {
+      console.log("NO PROFILE FOUND");
       //make get request to api to get id
       fetch('https://serene-escarpment-46084.herokuapp.com/randomId', {
         method: 'get',
@@ -92,7 +94,7 @@ class App extends Component {
 
     } else {
       // console.log("cookie found:  " + allCookies);
-
+      console.log("PROFILE FOUND");
       //set state according to cookies
       this.setState({
         userSettings: {
@@ -200,30 +202,30 @@ class App extends Component {
     });
   }
 
-  handleSettingsChange(changedKey, changedVal) {
+  // handleSettingsChange(changedKey, changedVal) {
+  //   console.log("running handleSettingsChange");
+  //   console.log("changedKey:  " + changedKey);
+  //   console.log("changedVal:  " + changedVal);
 
-    //the function at the end is a callback function - needed so we 
-    //can use the new state settings for operations immediately after changing
-    this.setState({
-      userSettings: {
-        ...this.state.userSettings,
-        [changedKey]: changedVal
-      }
-    }, function() {
-      //if changedKey == soundNum, call handleSoundPlaying
-      if(changedKey === "soundNum") {
-        this.handleSoundPlaying();
-      } else if(changedKey === "notifications") {
-        Notification.requestPermission();
-      }
+  //   //the function at the end is a callback function - needed so we 
+  //   //can use the new state settings for operations immediately after changing
+  //   this.setState({
+  //     userSettings: {
+  //       ...this.state.userSettings,
+  //       [changedKey]: changedVal
+  //     }
+  //   }, function() {
+  //     //if changedKey == soundNum, call handleSoundPlaying
+  //     if(changedKey === "soundNum") {
+  //       this.handleSoundPlaying();
+  //     } else if(changedKey === "notifications") {
+  //       Notification.requestPermission();
+  //     }
 
-      this.updateCookie();
-    });
+  //     this.updateCookie();
+  //   });
 
-
-    
-
-  }
+  // }
 
   handleSoundPlaying() {
     
@@ -234,14 +236,83 @@ class App extends Component {
   }
 
 
-  handleUsernameChange(newName, charNum) {
+  // handleProfileChange(newName, charNum) {
+
+  //   this.setState({
+      
+  //     userSettings: {
+  //       ...this.state.userSettings,
+  //       username: newName,
+  //       characterNum: charNum
+  //     },
+  //     flashNotice: true
+  //   }, function() {
+  //     //user clicked submit button, lets send that data to API endpoint to 
+  //     //update the document (entry) in db
+  //     //items to send: userId, username, characterNum
+
+  //     let payload = {
+  //       userId: this.state.userSettings.userId,
+  //       username: this.state.userSettings.username,
+  //       characterNum: this.state.userSettings.characterNum
+  //     }
+
+  //     fetch('https://serene-escarpment-46084.herokuapp.com/handleProfileChange', {
+  //       method: 'post',
+  //       mode: 'cors',
+  //       headers: {
+  //         'Accept': 'application/json, text/plain, */*',
+  //         'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify(payload)
+  //     }).then(function(res) {
+  //       return res.text();
+  //     })
+  //     .then(function(res) {
+  //       console.log(res);
+  //     }).catch(function(err) {
+  //       console.log(err);
+  //     });
+  //   });
+
+  //   //save new username into cookie
+  //   this.createCookie("username", newName, 367);
+  //   this.createCookie("characterNum", charNum, 367);
+
+  //   //run a method to reset the flash state
+  //   //using arrow function so context of this doesnt change!
+  //   setTimeout( () => {
+  //     this.setState({
+  //       flashNotice: false
+  //     });
+  //   }, 3000);
+  // }
+
+  //new method to handle settings changed
+  handleSaveSettingsClick(settingsSnapShot) {
+    console.log(settingsSnapShot);
+
+    // if(settingsSnapShot.username !== this.state.userSettings.username ||
+    //    settingsSnapShot.characterNum !== this.state.userSettings.characterNum) {
+    //   console.log("new username or characterNum!!");
+
+    //   this.handleProfileChange(settingsSnapShot.username, settingsSnapShot.characterNum);
+
+    // }
+
+    // for(let key in settingsSnapShot) {
+    //   // console.log("key:  " + key);
+    //   if(key !== "username" && key !== "characterNum") {
+    //     console.log("changing " + key + " to " + settingsSnapShot[key]);
+    //     this.handleSettingsChange(key, settingsSnapShot[key]);
+    //   }
+    // }
 
     this.setState({
       
       userSettings: {
         ...this.state.userSettings,
-        username: newName,
-        characterNum: charNum
+        ...settingsSnapShot
       },
       flashNotice: true
     }, function() {
@@ -266,16 +337,14 @@ class App extends Component {
       }).then(function(res) {
         return res.text();
       })
-      .then(function(res) {
+      .then((res) => {
         console.log(res);
+
+        this.updateCookie();
       }).catch(function(err) {
         console.log(err);
       });
     });
-
-    //save new username into cookie
-    this.createCookie("username", newName, 367);
-    this.createCookie("characterNum", charNum, 367);
 
     //run a method to reset the flash state
     //using arrow function so context of this doesnt change!
@@ -284,6 +353,10 @@ class App extends Component {
         flashNotice: false
       });
     }, 3000);
+
+    //save new username into cookie
+    // this.createCookie("username", newName, 367);
+    // this.createCookie("characterNum", charNum, 367);
   }
 
   onReceivedSortedNodes(sortedNodes) {
@@ -300,11 +373,12 @@ class App extends Component {
           <SettingsOverlay 
             settingsCogClicked={this.state.settingsCogClicked}
             handleSound={this.handleSoundPlaying}
-            settingsChange={this.handleSettingsChange}
+            // settingsChange={this.handleSettingsChange}
             userSettings={this.state.userSettings} 
-            handleUsernameChange={this.handleUsernameChange} 
+            // handleUsernameChange={this.handleUsernameChange} 
             flashNotice={this.state.flashNotice}
             handleSettingsCloseButtonClick={this.handleSettingsCloseButtonClick}
+            handleSaveSettingsClick={this.handleSaveSettingsClick}
           />
           <HeaderSection 
             handleSettingsButtonClick={this.handleSettingsButtonClick}

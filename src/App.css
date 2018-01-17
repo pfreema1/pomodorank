@@ -343,6 +343,7 @@ body{
   // background-color: green;
   display: inline-block;
   // padding-right: 40px;
+  // color: var(--mainTextColor);
 }
 
 .settings-overlay {
@@ -398,11 +399,25 @@ body{
   border: 1px solid rgba(0,0,0,0.3);
 }
 
-.submit-username-button {
+.save-settings-button {
   float: right;
   border-radius: var(--borderRoundness);
-  margin-top: 10px;
+  margin-top: 20px;
+  font-family: var(--primaryFont);
+  font-size: 40px;
+  background-color: RGBA(123, 239, 245, 1.00);
+  padding: 15px;
+  color: var(--logoShadowColor);
 }
+
+.save-settings-button:focus {
+  outline: 0;
+}
+
+.save-settings-button-container {
+  width: 80vw;
+}
+
 
 .settings-select {
   display: block;
@@ -418,11 +433,7 @@ body{
   text-align: center;
 }
 
-.submit-username-button {
-  font-family: var(--primaryFont);
-  background-color: RGBA(123, 239, 245, 1.00);
-  padding: 15px;
-}
+
 
 .username-input-and-button-container {
   // display: flex;

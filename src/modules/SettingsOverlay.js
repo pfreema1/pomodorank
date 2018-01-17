@@ -10,23 +10,66 @@ class SettingsOverlay extends Component {
         super(props);
         this.state = {
             showOverlay: false,
-            fadeGlow: false
+            fadeGlow: false,
+            characterNum: props.userSettings.characterNum,
+            username: props.userSettings.username,
+            soundNum: props.userSettings.soundNum
         };
 
-        
+        this.settingsSnapShot = {};
 
         this.closeButtonClickHandler = this.closeButtonClickHandler.bind(this);
         this.resetIconAnim = this.resetIconAnim.bind(this);
+        this.handleSubmitClick = this.handleSubmitClick.bind(this);
+        this.updateCharacter = this.updateCharacter.bind(this);
+        this.updateSettingsSnapShotSound = this.updateSettingsSnapShotSound.bind(this);
+        this.updateSettingsSnapShotVolume = this.updateSettingsSnapShotVolume.bind(this);
+        this.updateSettingsSnapShotNotifications = this.updateSettingsSnapShotNotifications.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
-        // console.log("nextProps.settingsCogClicked:  " + nextProps.settingsCogClicked);
+        
         if(nextProps.settingsCogClicked) {
             // show overlay!
             this.setState({
                 showOverlay: true
             });
+        }  
+
+        if(nextProps.userSettings.characterNum !== this.state.characterNum ||
+            nextProps.userSettings.username !== this.state.username) {
+                this.setState({
+                    characterNum: nextProps.userSettings.characterNum,
+                    username: nextProps.userSettings.username
+                }, () => console.log(this.state.characterNum));
         }
+        
+    }
+
+    updateCharacter(newCharNum) {
+        // console.log("updateCharacter being called");
+        // console.log("newCharNum:  " + newCharNum);
+        this.setState({
+            characterNum: newCharNum
+        });
+
+        this.settingsSnapShot.characterNum = newCharNum;
+    }
+
+    updateSettingsSnapShotSound(soundNum) {
+        this.settingsSnapShot.soundNum = soundNum;
+
+        this.setState({
+            soundNum: soundNum
+        });
+    }
+
+    updateSettingsSnapShotVolume(volume) {
+        this.settingsSnapShot.volume = volume;
+    }
+
+    updateSettingsSnapShotNotifications(notifications) {
+        this.settingsSnapShot.notifications = notifications;
     }
 
     closeButtonClickHandler() {
@@ -47,11 +90,40 @@ class SettingsOverlay extends Component {
         });
     }
 
+    handleSubmitClick() {
+        //get value of input at time of submit button click
+        let inputEl = document.querySelector(".username-input");
+        let usrString = inputEl.value;
+        if(usrString === "") {
+            if(inputEl.placeholder === "AnonymousTomato") 
+                usrString = "AnonymousTomato";
+            else 
+                usrString = inputEl.placeholder;
+        }
+
+        this.settingsSnapShot.username = usrString;
+        this.settingsSnapShot.characterNum = this.state.characterNum;
+        //get character number at time of submit button click
+        // let charNum = this.state.characterNum;
+        // console.log("charNum before running submission in parent:  " + charNum);
+
+        //update userSettings in parent
+        // this.props.handleUsernameChange(usrString, charNum);
+
+        //send settings snapshot to parent and let parent sort out new settings
+        this.props.handleSaveSettingsClick(this.settingsSnapShot);
+
+        this.settingsSnapShot = {};
+
+    }
+
     render() {
         return(
             <div className={"settings-overlay " + 
             (this.state.showOverlay ? "slide-settings-in" : "")}
             >
+                <pre>{JSON.stringify(this.props, null, 2)}</pre>
+
                 <div onClick={this.closeButtonClickHandler}
                     className="close-button-container"
                 >
@@ -69,20 +141,30 @@ class SettingsOverlay extends Component {
 
                 <div className="settings-container">
                     <UsernameCard 
-                        handleSettingsChange={this.props.settingsChange}
+                        // handleSettingsChange={this.props.settingsChange}
                         userSettings={this.props.userSettings}
-                        handleUsernameChange={this.props.handleUsernameChange}
+                        // handleUsernameChange={this.props.handleUsernameChange}
+                        updateCharacter={this.updateCharacter}
+                        characterNum={this.state.characterNum}
                     />
                     <SoundCard 
-                        handleSettingsChange={this.props.settingsChange}
+                        // handleSettingsChange={this.props.settingsChange}
                         handleSound={this.props.handleSound}
                         userSettings={this.props.userSettings}
+                        updateSettingsSnapShotSound={this.updateSettingsSnapShotSound}
+                        updateSettingsSnapShotVolume={this.updateSettingsSnapShotVolume}
+                        soundNum={this.state.soundNum}
                     />
                     
                     <NotificationsCard 
-                        handleSettingsChange={this.props.settingsChange}
+                        // handleSettingsChange={this.props.settingsChange}
                         userSettings={this.props.userSettings}
+                        updateSettingsSnapShotNotifications={this.updateSettingsSnapShotNotifications}
                     />
+
+                    <div className="save-settings-button-container">
+                        <button onClick={this.handleSubmitClick} className="save-settings-button box-shadow-normal">Save Settings</button>
+                    </div>
                 </div>
 
             </div>
@@ -97,69 +179,56 @@ class UsernameCard extends Component {
 
         this.state = {
             username: props.userSettings.username,
-            characterNum: props.userSettings.characterNum,
+            characterNum: props.characterNum,
             fadeGlow: false
         };
 
-        this.handleClick = this.handleClick.bind(this);
+        // this.handleClick = this.handleClick.bind(this);
         this.handleLeftClick = this.handleLeftClick.bind(this);
         this.handleRightClick = this.handleRightClick.bind(this);
         this.resetIconAnim = this.resetIconAnim.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
+        
         this.setState({
             username: nextProps.userSettings.username,
-            characterNum: nextProps.userSettings.characterNum
+            characterNum: nextProps.characterNum
         });
     }
 
-    handleClick() {
-        //get value of input at time of submit button click
-        let inputEl = document.querySelector(".username-input");
-        let usrString = inputEl.value;
-        if(usrString === "") {
-            if(inputEl.placeholder === "AnonymousTomato") 
-                usrString = "AnonymousTomato";
-            else 
-                usrString = inputEl.placeholder;
-        }
-        //get character number at time of submit button click
-        let charNum = this.state.characterNum;
-        //update userSettings in parent
-        this.props.handleUsernameChange(usrString, charNum);
-
-        
-    }
+    
 
     handleLeftClick() {
         let newCharNum = this.state.characterNum - 1;
-        if(newCharNum === 0) {
+        if(newCharNum === -1) {
             newCharNum = 162;
         }
         //scroll through funny faces array to the left 
-        this.setState({
-            characterNum: newCharNum,
-            fadeGlow: true
-        });
+        // this.setState({
+        //     characterNum: newCharNum,
+        //     fadeGlow: true
+        // });
         
         setTimeout(this.resetIconAnim, 500);
 
-
+        this.props.updateCharacter(newCharNum);
     }
 
     handleRightClick() {
         let newCharNum = this.state.characterNum + 1;
-        if(newCharNum === 162) {
+        if(newCharNum === 163) {
             newCharNum = 0;
         }
         //scroll through funny faces array to the left 
-        this.setState({
-            characterNum: newCharNum,
-            fadeGlow: true
-        });
+        // this.setState({
+        //     characterNum: newCharNum,
+        //     fadeGlow: true
+        // });
         
         setTimeout(this.resetIconAnim, 500);
+
+        this.props.updateCharacter(newCharNum);
     }
 
     resetIconAnim() {
@@ -171,6 +240,7 @@ class UsernameCard extends Component {
     render() {
         return(
             <div className="options-card box-shadow-normal">
+            <pre>{JSON.stringify(this.state, null, 2)}</pre>
                 <div>
                     Username
                 </div>
@@ -190,7 +260,7 @@ class UsernameCard extends Component {
                             </div>
                         </div>
                     </div>
-                    <button onClick={this.handleClick} className="submit-username-button box-shadow-normal">Submit</button>
+                    
                 </div>
             </div>
         );
@@ -214,7 +284,7 @@ class SoundCard extends Component {
         
         
         this.setState({
-            soundValue: nextProps.userSettings.soundNum,
+            soundValue: nextProps.soundNum,
             volumeValue: nextProps.userSettings.volume
         });
     }
@@ -225,7 +295,8 @@ class SoundCard extends Component {
         // this.props.handleSound(e.target.value, this.state.volumeValue);
 
         //tell parent controller a setting has changed
-        this.props.handleSettingsChange(e.target.id, parseInt(e.target.value, 10));
+        // this.props.handleSettingsChange(e.target.id, parseInt(e.target.value, 10));
+        this.props.updateSettingsSnapShotSound(parseInt(e.target.value, 10));
 
         this.setState({
             soundValue: e.target.value
@@ -235,16 +306,18 @@ class SoundCard extends Component {
     handleVolumeChange(e) {
 
         //tell parent controller a setting has changed
-        this.props.handleSettingsChange(e.target.id, parseFloat(e.target.value, 10));
+        // this.props.handleSettingsChange(e.target.id, parseFloat(e.target.value, 10));
+        this.props.updateSettingsSnapShotVolume(parseFloat(e.target.value, 10));
 
         this.setState({
-            volumeValue: e.target.value
+            volumeValue: parseFloat(e.target.value, 10)
         });
     }
 
     render() {
         return(
             <div className="options-card box-shadow-normal soundcard-container">
+            <pre>{JSON.stringify(this.state, null, 2)}</pre>
                 <div>
                     <div>
                         Sound
@@ -303,7 +376,9 @@ class NotificationsCard extends Component {
     handleClick(e) {
     
         //tell parent controller a setting has changed
-        this.props.handleSettingsChange("notifications", !this.state.notificationsOn);
+        // this.props.handleSettingsChange("notifications", !this.state.notificationsOn);
+
+        this.props.updateSettingsSnapShotNotifications(!this.state.notificationsOn);
 
         this.setState({
             notificationsOn: !this.state.notificationsOn
@@ -316,7 +391,7 @@ class NotificationsCard extends Component {
         return(
             <div className={"options-card box-shadow-normal notifications-container " + 
                 (this.state.isNewNotificationSupported ? "" : "dont-show")} >
-                
+                <pre>{JSON.stringify(this.state, null, 2)}</pre>
                 <div>
                     Notifications
                 </div>
